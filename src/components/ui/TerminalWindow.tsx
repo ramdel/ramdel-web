@@ -64,7 +64,7 @@ export default function TerminalWindow() {
       <div className="font-mono text-sm space-y-1 min-h-[400px]">
         {lines.slice(0, currentLine + 1).map((line, index) => (
           <div key={index} className="flex">
-            {line.startsWith(') ? (
+            {line.startsWith('$') ? (
               <span className="text-terminal-cyan">
                 {index === currentLine 
                   ? line.substring(0, currentChar)

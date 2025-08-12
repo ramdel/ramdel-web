@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { ArrowRight, Terminal, Shield, Cpu, MapPin, Mail } from 'lucide-react';
+import { ArrowRight, Terminal, Shield, Cpu, MapPin } from 'lucide-react';
 import TerminalWindow from '@/components/ui/TerminalWindow';
 import StatusIndicator from '@/components/ui/StatusIndicator';
 import ProgressBar from '@/components/ui/ProgressBar';

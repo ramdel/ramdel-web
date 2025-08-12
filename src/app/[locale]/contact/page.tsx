@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import ContactForm from '@/components/forms/ContactForm';
-import { Mail, MapPin, Linkedin, Github, Calendar } from 'lucide-react';
+import { Mail, MapPin, Linkedin, Github } from 'lucide-react';
 
 export const metadata = {
   title: 'Contact - Mario de Jesus',
@@ -92,7 +92,7 @@ export default function ContactPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-terminal-white">Response Time</span>
-                  <span className="text-terminal-cyan">< 24 hours</span>
+                  <span className="text-terminal-cyan">&lt; 24 hours</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-terminal-white">Preferred Meeting</span>
@@ -103,7 +103,7 @@ export default function ContactPage() {
 
             {/* Areas of Interest */}
             <div className="terminal-window">
-              <h3 className="text-lg font-semibold text-terminal-cyan mb-4">Let's Talk About</h3>
+              <h3 className="text-lg font-semibold text-terminal-cyan mb-4">Let&apos;s Talk About</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                 <div className="terminal-prompt text-terminal-green">DevSecOps roles</div>
                 <div className="terminal-prompt text-terminal-green">AI security projects</div>

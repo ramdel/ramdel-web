@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Monitor, Globe, Menu, X } from 'lucide-react';
+import { Monitor, Menu, X } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
 
 export default function Navigation() {

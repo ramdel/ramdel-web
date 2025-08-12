@@ -1,4 +1,11 @@
-export const trackEvent = (eventName: string, properties?: Record<string, any>) => {
+// Extend Window interface for Google Analytics
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void;
+  }
+}
+
+export const trackEvent = (eventName: string, properties?: Record<string, unknown>) => {
     if (typeof window !== 'undefined') {
       // Google Analytics 4
       if (window.gtag) {

@@ -16,6 +16,15 @@ export const metadata = {
   keywords: 'DevSecOps, Security, AI, Montreal, AWS, Python, Automation',
 };
 
+// Generate static params for all supported locales
+export async function generateStaticParams() {
+  return [
+    { locale: 'en' },
+    { locale: 'es' },
+    { locale: 'fr' }
+  ];
+}
+
 interface RootLayoutProps {
   children: React.ReactNode;
   params: { locale: string };
