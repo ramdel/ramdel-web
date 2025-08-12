@@ -1,0 +1,30 @@
+{
+  "HomePage": {
+    "title": "Mario de Jesus",
+    "subtitle": "Ingénieur DevSecOps • Leader Technique • Automatisation de Sécurité IA",
+    "location": "Montréal, QC 🍁",
+    "tagline": "Construire des systèmes sécurisés avec l'automatisation alimentée par l'IA",
+    "cta": "Contactez-moi",
+    "about": "À propos",
+    "projects": "Projets",
+    "contact": "Contact"
+  },
+  "Navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "projects": "Projets",
+    "contact": "Contact", 
+    "blog": "Blog"
+  },
+  "Contact": {
+    "title": "Connectons-nous",
+    "subtitle": "Prêt à discuter de DevSecOps, d'automatisation IA, ou d'opportunités à Montréal",
+    "name": "Nom",
+    "email": "Courriel",
+    "message": "Message",
+    "send": "Envoyer le Message",
+    "sending": "Envoi en cours...",
+    "success": "Message envoyé avec succès!",
+    "error": "Erreur lors de l'envoi. Veuillez réessayer."
+  }
+}

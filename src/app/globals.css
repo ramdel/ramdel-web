@@ -1,26 +1,80 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Terminal color scheme */
+  --terminal-black: #0a0a0a;
+  --terminal-dark: #1a1a1a;
+  --terminal-green: #00ff41;
+  --terminal-cyan: #00d4ff;
+  --terminal-white: #f0f0f0;
+  --terminal-gray: #a0a0a0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-terminal-green/20;
+  }
+  
+  body {
+    background: linear-gradient(135deg, var(--terminal-black) 0%, #0d1117 100%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .terminal-scanlines {
+    @apply fixed inset-0 pointer-events-none z-0;
+    background: linear-gradient(
+      transparent 98%,
+      rgba(0, 255, 65, 0.03) 100%
+    );
+    background-size: 100% 4px;
+  }
+  
+  .terminal-window {
+    @apply bg-terminal-dark border border-terminal-green/30 rounded-lg p-6;
+    box-shadow: 
+      0 0 20px rgba(0, 255, 65, 0.1),
+      inset 0 1px 0 rgba(0, 255, 65, 0.1);
+  }
+  
+  .terminal-prompt {
+    @apply text-terminal-green;
+  }
+  
+  .terminal-prompt::before {
+    content: '$ ';
+    @apply text-terminal-cyan;
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 10px currentColor;
+  }
+  
+  .typing-animation {
+    overflow: hidden;
+    border-right: 2px solid var(--terminal-green);
+    white-space: nowrap;
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: var(--terminal-green); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(0, 255, 65, 0.6); }
+}
+
+.glow-border {
+  animation: glow 2s ease-in-out infinite alternate;
 }

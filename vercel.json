@@ -1,0 +1,41 @@
+{
+    "buildCommand": "npm run build",
+    "outputDirectory": "out",
+    "framework": "nextjs",
+    "regions": ["iad1"],
+    "functions": {
+      "src/app/api/contact/route.ts": {
+        "maxDuration": 10
+      }
+    },
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "X-XSS-Protection",
+            "value": "1; mode=block"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
+        ]
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/ramdel.mx/(.*)",
+        "destination": "/ramdel.dev/$1",
+        "permanent": true
+      }
+    ]
+  }

@@ -1,0 +1,30 @@
+{
+  "HomePage": {
+    "title": "Mario de Jesus",
+    "subtitle": "DevSecOps Engineer • Technical Lead • AI Security Automation",
+    "location": "Montreal, QC 🍁",
+    "tagline": "Building secure systems with AI-powered automation",
+    "cta": "Get In Touch",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "Navigation": {
+    "home": "Home",
+    "about": "About", 
+    "projects": "Projects",
+    "contact": "Contact",
+    "blog": "Blog"
+  },
+  "Contact": {
+    "title": "Let's Connect",
+    "subtitle": "Ready to discuss DevSecOps, AI automation, or opportunities in Montreal",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Error sending message. Please try again."
+  }
+}
