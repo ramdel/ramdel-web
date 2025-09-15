@@ -49,7 +49,7 @@ export default function Footer() {
           <div>
             <div className="text-sm text-terminal-gray">
               <p className="terminal-prompt">
-                Built with Next.js & Vercel
+                Built with love from Montreal, QC 🍁
               </p>
               <p className="mt-2">
                 © {currentYear} Mario de Jesus. All rights reserved.
