@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
