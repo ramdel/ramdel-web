@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { Minimize2, Maximize2, X } from 'lucide-react';
+import { useMemo } from 'react';
 
 export default function TerminalWindow() {
   const [currentLine, setCurrentLine] = useState(0);
   const [currentChar, setCurrentChar] = useState(0);
   
-  const lines = [
+  const lines = useMemo(() => [
+    'Initializing secure connection...',
+    'Loading AI security modules...',
     '$ whoami',
     'mario@devsecops-engineer',
     '',
@@ -26,7 +29,7 @@ export default function TerminalWindow() {
     '',
     '$ ./contact_mario.sh',
     'Ready to connect! 🚀'
-  ];
+  ], []);
 
   useEffect(() => {
     if (currentLine < lines.length) {
