@@ -1,22 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  /* Terminal color scheme */
-  --terminal-black: #0a0a0a;
-  --terminal-dark: #1a1a1a;
-  --terminal-green: #00ff41;
-  --terminal-cyan: #00d4ff;
-  --terminal-white: #f0f0f0;
-  --terminal-gray: #a0a0a0;
+@theme {
+  --color-terminal-black: #0a0a0a;
+  --color-terminal-dark: #1a1a1a;
+  --color-terminal-green: #00ff41;
+  --color-terminal-cyan: #00d4ff;
+  --color-terminal-white: #f0f0f0;
+  --color-terminal-gray: #a0a0a0;
+  
+  --font-family-mono: var(--font-mono), 'JetBrains Mono', 'Monaco', 'Consolas', monospace;
+  
+  --animate-typing: typing 3.5s steps(40, end);
+  --animate-blink-caret: blink-caret 0.75s step-end infinite;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+  --animate-scanlines: scanlines 0.1s linear infinite;
 }
 
 @layer base {
-  * {
-    @apply border-terminal-green/20;
-  }
-  
   body {
     background: linear-gradient(135deg, var(--terminal-black) 0%, #0d1117 100%);
   }
@@ -24,7 +24,13 @@
 
 @layer components {
   .terminal-scanlines {
-    @apply fixed inset-0 pointer-events-none z-0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
     background: linear-gradient(
       transparent 98%,
       rgba(0, 255, 65, 0.03) 100%
@@ -33,19 +39,22 @@
   }
   
   .terminal-window {
-    @apply bg-terminal-dark border border-terminal-green/30 rounded-lg p-6;
+    background-color: var(--terminal-dark);
+    border: 1px solid rgb(0 255 65 / 0.3);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
     box-shadow: 
       0 0 20px rgba(0, 255, 65, 0.1),
       inset 0 1px 0 rgba(0, 255, 65, 0.1);
   }
   
   .terminal-prompt {
-    @apply text-terminal-green;
+    color: var(--terminal-green);
   }
   
   .terminal-prompt::before {
     content: '$ ';
-    @apply text-terminal-cyan;
+    color: var(--terminal-cyan);
   }
   
   .glow-text {
@@ -73,6 +82,11 @@
 @keyframes glow {
   0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); }
   50% { box-shadow: 0 0 30px rgba(0, 255, 65, 0.6); }
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }
 
 .glow-border {

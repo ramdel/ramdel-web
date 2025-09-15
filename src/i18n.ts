@@ -1,15 +1,23 @@
-import {notFound} from 'next/navigation';
 import {getRequestConfig} from 'next-intl/server';
 
-// Can be imported from a shared config
-const locales = ['en', 'es', 'fr'];
+export default getRequestConfig(async ({requestLocale}) => {
+  // requestLocale es una Promise en Next.js 15
+  const resolvedLocale = await requestLocale;
+  let locale = resolvedLocale;
 
-export default getRequestConfig(async ({locale}) => {
-  // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as string)) notFound();
+  // Fallback si requestLocale es undefined
+  if (!locale) {
+    locale = 'en'; // Default locale
+  }
+
+  // Validate locale
+  const supportedLocales = ['en', 'es', 'fr'];
+  if (!supportedLocales.includes(locale)) {
+    locale = 'en';
+  }
 
   return {
-    locale: locale as string,
+    locale,
     messages: (await import(`../messages/${locale}.json`)).default
   };
 });
