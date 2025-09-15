@@ -31,7 +31,7 @@ export default function ContactPage() {
               </h2>
               
               <div className="space-y-4">
-                <div className="flex items-center space-x-4 p-3 border border-terminal-green/20 rounded">
+                <div className="flex items-center space-x-4 p-3 border border-terminal-green border-opacity-20 rounded">
                   <Mail className="h-5 w-5 text-terminal-green" />
                   <div>
                     <div className="text-terminal-white font-medium">Email</div>
@@ -39,7 +39,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 p-3 border border-terminal-green/20 rounded">
+                <div className="flex items-center space-x-4 p-3 border border-terminal-green border-opacity-20 rounded">
                   <MapPin className="h-5 w-5 text-terminal-cyan" />
                   <div>
                     <div className="text-terminal-white font-medium">Location</div>
@@ -47,7 +47,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 p-3 border border-terminal-green/20 rounded">
+                <div className="flex items-center space-x-4 p-3 border border-terminal-green border-opacity-20 rounded">
                   <Linkedin className="h-5 w-5 text-terminal-green" />
                   <div>
                     <div className="text-terminal-white font-medium">LinkedIn</div>
@@ -62,7 +62,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 p-3 border border-terminal-green/20 rounded">
+                <div className="flex items-center space-x-4 p-3 border border-terminal-green border-opacity-20 rounded">
                   <Github className="h-5 w-5 text-terminal-cyan" />
                   <div>
                     <div className="text-terminal-white font-medium">GitHub</div>

@@ -21,7 +21,7 @@ interface StatusIndicatorProps {
     };
   
     return (
-      <div className="flex items-center justify-between bg-terminal-dark/50 border border-terminal-green/20 rounded px-3 py-2">
+      <div className="flex items-center justify-between bg-terminal-dark bg-opacity-50 border border-terminal-green border-opacity-20 rounded px-3 py-2">
         <div className="flex items-center space-x-2">
           {icon}
           <span className="text-sm text-terminal-white">{label}</span>

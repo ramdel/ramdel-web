@@ -32,8 +32,9 @@ interface RootLayoutProps {
 
 export default async function RootLayout({
   children,
-  params: { locale }
+  params
 }: RootLayoutProps) {
+  const { locale } = await params;
   const messages = await getMessages();
 
   return (
