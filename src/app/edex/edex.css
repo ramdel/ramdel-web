@@ -1,0 +1,476 @@
+/* ═══════════════════════════════════════════════
+   eDEX-UI / TRON Legacy Design System
+   ramdel.dev — Mario de Jesus
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --edex-bg: #050505;
+  --edex-bg2: #0a0f14;
+  --edex-panel: #080d12;
+  --edex-cyan: #00e5ff;
+  --edex-cyan-dim: #00bcd4;
+  --edex-cyan-glow: rgba(0, 229, 255, 0.6);
+  --edex-green: #00ff88;
+  --edex-green-dim: #00cc6a;
+  --edex-white: #e0f7fa;
+  --edex-gray: #546e7a;
+  --edex-border: rgba(0, 229, 255, 0.25);
+  --edex-border-bright: rgba(0, 229, 255, 0.7);
+  --edex-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+  --edex-glow-sm: 0 0 8px rgba(0, 229, 255, 0.8);
+  --edex-glow-md: 0 0 20px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.2);
+  --edex-glow-lg: 0 0 30px rgba(0, 229, 255, 0.6), 0 0 60px rgba(0, 229, 255, 0.3);
+}
+
+/* ── Base ──────────────────────────────────── */
+
+.edex-body {
+  background-color: var(--edex-bg);
+  color: var(--edex-cyan);
+  font-family: var(--font-mono), 'JetBrains Mono', 'Share Tech Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Scanlines ─────────────────────────────── */
+
+.edex-scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.08) 3px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+}
+
+/* ── Grid Overlay ──────────────────────────── */
+
+.edex-grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Panels ────────────────────────────────── */
+
+.edex-panel {
+  background: var(--edex-panel);
+  border: 1px solid var(--edex-border);
+  position: relative;
+  box-shadow: var(--edex-shadow);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.edex-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 229, 255, 0.03) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.edex-panel:hover {
+  border-color: var(--edex-border-bright);
+  box-shadow: var(--edex-glow-md);
+}
+
+/* Panel corner decorations */
+.edex-panel-corners::before,
+.edex-panel-corners::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--edex-cyan);
+  border-style: solid;
+}
+.edex-panel-corners::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+}
+.edex-panel-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+/* ── Panel Header ──────────────────────────── */
+
+.edex-panel-header {
+  border-bottom: 1px solid var(--edex-border);
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 229, 255, 0.04);
+}
+
+.edex-panel-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--edex-cyan);
+  font-weight: 700;
+}
+
+.edex-panel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--edex-cyan);
+  box-shadow: var(--edex-glow-sm);
+  animation: edex-pulse 2s ease-in-out infinite;
+}
+
+/* ── Top Bar ───────────────────────────────── */
+
+.edex-topbar {
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid var(--edex-border-bright);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+  position: relative;
+  z-index: 100;
+}
+
+.edex-topbar-segment {
+  padding: 0 1rem;
+  border-right: 1px solid var(--edex-border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edex-topbar-segment:last-child {
+  border-right: none;
+}
+
+/* ── Typography ────────────────────────────── */
+
+.edex-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--edex-gray);
+}
+
+.edex-value {
+  color: var(--edex-cyan);
+}
+
+.edex-cyan-glow {
+  color: var(--edex-cyan);
+  text-shadow: var(--edex-glow-sm);
+}
+
+.edex-green-glow {
+  color: var(--edex-green);
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.8);
+}
+
+.edex-title-hero {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--edex-cyan);
+  text-shadow: var(--edex-glow-lg);
+  line-height: 1.1;
+}
+
+.edex-subtitle {
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--edex-green);
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+}
+
+/* ── Terminal Lines ────────────────────────── */
+
+.edex-terminal-line {
+  line-height: 1.8;
+  font-size: 0.8rem;
+  color: var(--edex-white);
+}
+
+.edex-prompt {
+  color: var(--edex-cyan);
+  text-shadow: var(--edex-glow-sm);
+}
+
+.edex-caret {
+  color: var(--edex-cyan);
+  animation: edex-blink 0.75s step-end infinite;
+}
+
+/* ── Gauges ────────────────────────────────── */
+
+.edex-gauge {
+  margin-bottom: 0.75rem;
+}
+
+.edex-gauge-seg {
+  height: 8px;
+  flex: 1;
+  transition: background 0.3s;
+}
+
+.edex-gauge-empty {
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.1);
+}
+
+.edex-gauge-filled.edex-gauge-cyan {
+  background: var(--edex-cyan);
+  box-shadow: 0 0 6px rgba(0, 229, 255, 0.8);
+}
+
+.edex-gauge-filled.edex-gauge-green {
+  background: var(--edex-green);
+  box-shadow: 0 0 6px rgba(0, 255, 136, 0.8);
+}
+
+/* ── Metric Cards ──────────────────────────── */
+
+.edex-metric {
+  border: 1px solid var(--edex-border);
+  background: rgba(0, 229, 255, 0.03);
+  padding: 1rem;
+  position: relative;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.edex-metric:hover {
+  border-color: var(--edex-cyan);
+  box-shadow: var(--edex-glow-sm);
+}
+
+.edex-metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.edex-metric-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--edex-gray);
+  margin-top: 0.25rem;
+}
+
+/* ── Module Tags ───────────────────────────── */
+
+.edex-module {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  background: rgba(0, 229, 255, 0.04);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--edex-cyan);
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.edex-module:hover {
+  border-color: var(--edex-cyan);
+  background: rgba(0, 229, 255, 0.1);
+  box-shadow: var(--edex-glow-sm);
+  color: #fff;
+}
+
+.edex-module-status {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--edex-green);
+  box-shadow: 0 0 4px var(--edex-green);
+  flex-shrink: 0;
+  animation: edex-pulse 2s ease-in-out infinite;
+}
+
+/* ── Status Bar ────────────────────────────── */
+
+.edex-statusbar {
+  border-top: 1px solid var(--edex-border-bright);
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.08);
+  position: relative;
+  z-index: 100;
+}
+
+.edex-statusbar-item {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0 0.75rem;
+  border-right: 1px solid var(--edex-border);
+  white-space: nowrap;
+}
+
+.edex-statusbar-item:last-child {
+  border-right: none;
+}
+
+/* ── Divider ───────────────────────────────── */
+
+.edex-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--edex-border-bright) 20%,
+    var(--edex-border-bright) 80%,
+    transparent
+  );
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.edex-divider::after {
+  content: '◆';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--edex-panel);
+  padding: 0 0.5rem;
+  color: var(--edex-cyan);
+  font-size: 0.6rem;
+  text-shadow: var(--edex-glow-sm);
+}
+
+/* ── Skill Bar (horizontal) ────────────────── */
+
+.edex-skill-bar {
+  position: relative;
+  height: 3px;
+  background: rgba(0, 229, 255, 0.1);
+  overflow: hidden;
+}
+
+.edex-skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--edex-cyan-dim), var(--edex-cyan));
+  box-shadow: 0 0 6px var(--edex-cyan);
+  animation: edex-grow 1.5s ease-out forwards;
+  transform-origin: left;
+}
+
+/* ── Section Title ─────────────────────────── */
+
+.edex-section-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--edex-cyan);
+  text-shadow: var(--edex-glow-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.edex-section-title::before,
+.edex-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--edex-border);
+}
+
+/* ── Animations ────────────────────────────── */
+
+@keyframes edex-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes edex-blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes edex-glow-breathe {
+  0%, 100% { box-shadow: var(--edex-shadow); }
+  50% { box-shadow: var(--edex-glow-md); }
+}
+
+@keyframes edex-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes edex-slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes edex-flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.7; }
+  97% { opacity: 1; }
+  98% { opacity: 0.6; }
+}
+
+.edex-animate-in {
+  animation: edex-slide-in 0.6s ease-out forwards;
+}
+
+.edex-flicker {
+  animation: edex-flicker 8s ease-in-out infinite;
+}
+
+/* ── Responsive ────────────────────────────── */
+
+.edex-main-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr 220px;
+  grid-template-rows: 1fr;
+  gap: 1px;
+  flex: 1;
+  min-height: 0;
+  background: var(--edex-border);
+}
+
+@media (max-width: 1024px) {
+  .edex-main-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 1px;
+    background: transparent;
+  }
+}
+
+.edex-bottom-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--edex-border);
+}
+
+@media (max-width: 768px) {
+  .edex-bottom-panels {
+    grid-template-columns: 1fr;
+  }
+}
