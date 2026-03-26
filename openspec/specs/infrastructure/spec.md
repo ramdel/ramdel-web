@@ -55,4 +55,30 @@ Sensitive configuration SHALL be stored as environment variables, never hardcode
 ### Requirement: CI on PRs
 Every PR to `main` SHALL run lint and build checks before merge is allowed.
 
-**Status:** ✅ Implemented (.github/workflows/ci.yml)
+**Status:** ✅ Implemented (.github/workflows/ci.yml — Node 22, npm install, eslint src, next build)
+
+---
+
+### Requirement: Supply Chain Hardening
+The project SHALL block postinstall/preinstall script execution from npm packages.
+
+#### Scenario: npm install
+- GIVEN a developer runs `npm install`
+- WHEN `.npmrc` has `ignore-scripts=true`
+- THEN no postinstall/preinstall scripts SHALL execute
+
+**Status:** ✅ Implemented (.npmrc, ci.yml --ignore-scripts)
+
+---
+
+### Requirement: Invisible Unicode Scan
+Every PR SHALL be scanned for invisible Unicode characters (Private Use Area) in source files.
+
+**Status:** ✅ Implemented (.github/workflows/security-scan.yml)
+
+---
+
+### Requirement: Next.js Version
+The system SHALL run Next.js ≥16.2.1 to mitigate CVE-2025-55182 (React2Shell) and related CVEs.
+
+**Status:** ✅ Implemented (next@16.2.1, eslint-config-next@16.2.1)
