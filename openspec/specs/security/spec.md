@@ -49,7 +49,7 @@ The system SHALL include a `Content-Security-Policy` header on all HTML response
 - WHEN a violation occurs
 - THEN it SHOULD be reported via `report-uri` or `report-to` directive
 
-**Status:** ⬜ PENDING — Finding F-09 (High) — security-audits audit v1.0
+**Status:** ✅ Remediated — PR #5 mergeado (2026-03-26)
 **Change:** `openspec/changes/security-headers/`
 
 ---
@@ -62,7 +62,7 @@ The system SHALL include a `Permissions-Policy` header restricting sensitive bro
 - WHEN the response headers are inspected
 - THEN `Permissions-Policy` SHALL restrict at minimum: `camera=()`, `microphone=()`, `geolocation=()`, `payment=()`
 
-**Status:** ⬜ PENDING — Finding F-10 (Medium) — security-audits audit v1.0
+**Status:** ✅ Remediated — PR #5 mergeado (2026-03-26)
 **Change:** `openspec/changes/security-headers/`
 
 ---
@@ -75,7 +75,7 @@ The `NEXT_LOCALE` cookie SHALL be set with `Secure` and `HttpOnly` flags.
 - WHEN the `NEXT_LOCALE` cookie is set
 - THEN it SHALL include `Secure; HttpOnly; SameSite=lax`
 
-**Status:** ⬜ PENDING — Finding F-08/F-17 (Medium) — security-audits audit v1.0
+**Status:** ✅ Remediated — PR #5 mergeado (2026-03-26)
 **Change:** `openspec/changes/cookie-hardening/`
 
 ---
@@ -88,7 +88,7 @@ The `POST /api/contact/` endpoint SHALL enforce rate limiting per IP.
 - WHEN the 6th request arrives
 - THEN the endpoint SHALL return HTTP 429 Too Many Requests
 
-**Status:** ⬜ PENDING — Finding F-26/F-27 (Medium) — security-audits audit v1.0
+**Status:** ✅ Remediated — PR #5 mergeado, Upstash configurado en Vercel (2026-03-26)
 **Change:** `openspec/changes/api-rate-limiting/`
 
 ---
