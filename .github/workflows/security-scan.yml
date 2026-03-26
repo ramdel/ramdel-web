@@ -1,0 +1,49 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  invisible-unicode-scan:
+    name: Invisible Unicode + Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for invisible Unicode characters in source
+        run: |
+          # Scan for Unicode Private Use Area characters used in invisible payload attacks
+          # U+FE00-FE0F (Variation Selectors) and U+E0100-E01EF (Variation Selectors Supplement)
+          # Excludes binary files (ico, png, jpg, woff) to avoid false positives
+          echo "Scanning for invisible Unicode in source files..."
+          FOUND=$(grep -rlP "[\x{FE00}-\x{FE0F}\x{E0100}-\x{E01EF}]" \
+            --include="*.ts" --include="*.tsx" --include="*.js" \
+            --include="*.jsx" --include="*.json" --include="*.mjs" \
+            src/ 2>/dev/null || true)
+          if [ -n "$FOUND" ]; then
+            echo "❌ Invisible Unicode characters found in:"
+            echo "$FOUND"
+            exit 1
+          fi
+          echo "✅ No invisible Unicode characters found in source"
+
+      - name: Check for eval() usage in source
+        run: |
+          if grep -rn "eval(" src/; then
+            echo "❌ eval() found in source — manual review required"
+            exit 1
+          fi
+          echo "✅ No eval() found in source"
+
+      - name: Secret scan with trufflehog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./src
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
