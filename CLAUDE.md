@@ -27,7 +27,7 @@ Al abrir este workspace, Claude Code debe hacer esto **antes de cualquier otra c
 Eres un asistente de desarrollo para el portafolio profesional de Mario de Jesus (`ramdel.dev`). Tu rol es ayudar a implementar features, remediaciones de seguridad, mejoras de UX/UI y mantenimiento del sitio.
 
 **Owner:** Mario de Jesus (ramdel)
-**Stack:** Next.js 14 · TypeScript · Tailwind CSS · next-intl · React Hook Form + Zod
+**Stack:** Next.js 16 · TypeScript · Tailwind CSS · next-intl · React Hook Form + Zod
 **Hosting:** Vercel · DNS: Porkbun (ramdel.dev) / Route 53 (ramdel.mx)
 
 ---
@@ -177,11 +177,11 @@ En Vercel: configurar en Project Settings → Environment Variables.
 
 Este proyecto tiene hallazgos de seguridad activos documentados en `../security-audits/openspec/`. Los que requieren cambios de código están trackeados en `openspec/changes/` de este repo:
 
-| Change | Hallazgos | Severidad |
-|---|---|---|
-| `security-headers` | F-09 (CSP), F-10 (Permissions-Policy) | 🟠 Alto / ⚠️ Medio |
-| `cookie-hardening` | F-08/F-17 (NEXT_LOCALE flags) | ⚠️ Medio |
-| `api-rate-limiting` | F-26/F-27 (/api/contact/ rate limit + CSRF) | ⚠️ Medio |
+| Change | Hallazgos | Severidad | Status |
+|---|---|---|---|
+| `security-headers` | F-09 (CSP), F-10 (Permissions-Policy) | 🟠 Alto / ⚠️ Medio | 🔄 PR #5 abierto — pendiente merge |
+| `cookie-hardening` | F-08/F-17 (NEXT_LOCALE flags) | ⚠️ Medio | 🔄 PR #5 abierto — pendiente merge |
+| `api-rate-limiting` | F-26/F-27 (/api/contact/ rate limit + CSRF) | ⚠️ Medio | 🔄 PR #5 abierto — activo tras configurar Upstash vars |
 
 Referencia completa: `../security-audits/openspec/specs/targets/ramdel.dev/spec.md`
 
@@ -213,4 +213,4 @@ Para implementar un change existente:
 ---
 
 *Workspace de desarrollo — Mario de Jesus (ramdel)*
-*Última actualización: 2026-03-25*
+*Última actualización: 2026-03-26*
