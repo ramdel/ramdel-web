@@ -14,7 +14,7 @@ Mario de Jesus - DevSecOps Engineer portfolio website built with Next.js, TypeSc
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **i18n**: next-intl
@@ -22,6 +22,7 @@ Mario de Jesus - DevSecOps Engineer portfolio website built with Next.js, TypeSc
 - **Icons**: Lucide React
 - **Hosting**: Vercel
 - **Email**: AWS SES (when configured)
+- **Rate Limiting**: Upstash Redis (@upstash/ratelimit)
 
 ## Quick Start
 
@@ -82,6 +83,8 @@ AWS_REGION=us-east-2
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
+UPSTASH_REDIS_REST_URL=https://your-db.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_token
 ```
 
 ## License
