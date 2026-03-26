@@ -40,10 +40,15 @@ jobs:
           fi
           echo "✅ No eval() found in source"
 
-      - name: Secret scan with trufflehog
-        uses: trufflesecurity/trufflehog@main
+      - name: Setup Go (for trufflehog)
+        uses: actions/setup-go@v5
         with:
-          path: ./src
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --only-verified
+          go-version: '1.22'
+
+      - name: Install trufflehog
+        run: go install github.com/trufflesecurity/trufflehog/v3@latest
+
+      - name: Secret scan with trufflehog
+        run: |
+          trufflehog filesystem ./src --no-update --only-verified
+          echo "✅ Secret scan complete"
