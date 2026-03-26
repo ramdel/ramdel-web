@@ -1,0 +1,49 @@
+name: Validate PR
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate-sections:
+    name: Check all 7 required sections
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR body sections
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.pull_request.body || '';
+
+            const required = [
+              'Summary',
+              'Type of Change',
+              'Areas Affected',
+              'What Changed',
+              'How to Review',
+              'Checklist',
+              'Related Issues',
+            ];
+
+            const missing = required.filter(section => !body.includes(`## ${section}`));
+
+            if (missing.length > 0) {
+              core.setFailed(`PR body is missing required sections:\n${missing.map(s => `  - ## ${s}`).join('\n')}`);
+            }
+
+            const summaryMatch = body.match(/## Summary\s*\n+([^\n#]+)/);
+            if (!summaryMatch || summaryMatch[1].trim().length < 20) {
+              core.setFailed('Summary section must have at least 20 characters of content.');
+            }
+
+            const sensitivePatterns = [
+              /AKIA[0-9A-Z]{16}/,
+              /sk_live_[0-9a-zA-Z]{24}/,
+              /ghp_[0-9a-zA-Z]{36}/,
+              /-----BEGIN (RSA |EC )?PRIVATE KEY-----/,
+            ];
+            for (const pattern of sensitivePatterns) {
+              if (pattern.test(body)) {
+                core.setFailed('Potential sensitive data detected in PR body.');
+              }
+            }
