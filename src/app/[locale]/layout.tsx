@@ -44,7 +44,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
 
   return (
     <html lang={locale} className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="min-h-screen bg-bg text-fg antialiased font-sans">
+      <body className="min-h-screen bg-bg text-fg antialiased font-sans" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <div className="min-h-screen flex flex-col">
             <Navigation />
