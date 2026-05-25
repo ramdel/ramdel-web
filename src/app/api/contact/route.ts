@@ -71,9 +71,106 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validatedData = contactSchema.parse(body);
 
-    // Get client info for security tracking
-    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
-    const userAgent = request.headers.get('user-agent') || 'unknown';
+    // Collect client metadata
+    const clientIP = (request.headers.get('x-forwarded-for') ?? 'unknown').split(',')[0].trim();
+    const userAgent = request.headers.get('user-agent') ?? 'unknown';
+    const referer = request.headers.get('referer') ?? 'direct';
+    const acceptLanguage = request.headers.get('accept-language')?.split(',')[0] ?? 'unknown';
+    const timestamp = new Date().toISOString();
+
+    // Parse OS and browser from User-Agent (no external library)
+    const os = /Windows/.test(userAgent) ? 'Windows'
+      : /Mac OS X/.test(userAgent) ? 'macOS'
+      : /Android/.test(userAgent) ? 'Android'
+      : /iPhone|iPad/.test(userAgent) ? 'iOS'
+      : /Linux/.test(userAgent) ? 'Linux'
+      : 'Unknown';
+
+    const browser = /Edg\//.test(userAgent) ? 'Edge'
+      : /OPR\/|Opera/.test(userAgent) ? 'Opera'
+      : /Brave/.test(userAgent) ? 'Brave'
+      : /Firefox\//.test(userAgent) ? 'Firefox'
+      : /Chrome\//.test(userAgent) ? 'Chrome'
+      : /Safari\//.test(userAgent) ? 'Safari'
+      : 'Unknown';
+
+    // HTML email template
+    const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:24px 16px;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <div style="max-width:580px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+
+    <!-- Header -->
+    <div style="background:#0a0a0a;padding:24px 32px;">
+      <p style="margin:0;font-family:monospace;font-size:15px;">
+        <span style="color:#00d4ff;">ramdel</span><span style="color:#f4f4f5;">.dev</span>
+      </p>
+      <p style="margin:6px 0 0;color:#71717a;font-size:12px;letter-spacing:0.04em;">NEW CONTACT FORM SUBMISSION</p>
+    </div>
+
+    <!-- Contact info -->
+    <div style="padding:24px 32px;border-bottom:1px solid #e4e4e7;">
+      <table style="width:100%;border-collapse:collapse;">
+        <tr>
+          <td style="padding:5px 0;color:#71717a;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;width:72px;">Name</td>
+          <td style="padding:5px 0;font-size:14px;font-weight:600;color:#09090b;">${validatedData.name}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 0;color:#71717a;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;">Email</td>
+          <td style="padding:5px 0;font-size:14px;color:#0284c7;">
+            <a href="mailto:${validatedData.email}" style="color:#0284c7;text-decoration:none;">${validatedData.email}</a>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px 0;color:#71717a;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;">Subject</td>
+          <td style="padding:5px 0;font-size:14px;color:#09090b;">${validatedData.subject}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Message -->
+    <div style="padding:24px 32px;border-bottom:1px solid #e4e4e7;">
+      <p style="margin:0 0 12px;color:#71717a;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;">Message</p>
+      <div style="background:#f9fafb;border-left:3px solid #00d4ff;border-radius:0 6px 6px 0;padding:16px 20px;">
+        <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;white-space:pre-wrap;">${validatedData.message}</p>
+      </div>
+    </div>
+
+    <!-- Metadata footer -->
+    <div style="padding:18px 32px;background:#fafafa;border-top:1px solid #e4e4e7;">
+      <p style="margin:0 0 6px;color:#a1a1aa;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;">Technical info</p>
+      <table style="width:100%;border-collapse:collapse;font-family:monospace;font-size:11px;color:#71717a;">
+        <tr><td style="padding:2px 12px 2px 0;white-space:nowrap;">IP</td><td style="padding:2px 0;">${clientIP}</td></tr>
+        <tr><td style="padding:2px 12px 2px 0;white-space:nowrap;">OS</td><td style="padding:2px 0;">${os}</td></tr>
+        <tr><td style="padding:2px 12px 2px 0;white-space:nowrap;">Browser</td><td style="padding:2px 0;">${browser}</td></tr>
+        <tr><td style="padding:2px 12px 2px 0;white-space:nowrap;">Language</td><td style="padding:2px 0;">${acceptLanguage}</td></tr>
+        <tr><td style="padding:2px 12px 2px 0;white-space:nowrap;">Referer</td><td style="padding:2px 0;">${referer}</td></tr>
+        <tr><td style="padding:2px 12px 2px 0;white-space:nowrap;">Timestamp</td><td style="padding:2px 0;">${timestamp}</td></tr>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>`;
+
+    // Plain-text fallback
+    const textBody = `New contact form submission — ramdel.dev
+
+Name:     ${validatedData.name}
+Email:    ${validatedData.email}
+Subject:  ${validatedData.subject}
+
+Message:
+${validatedData.message}
+
+--- Technical info ---
+IP:        ${clientIP}
+OS:        ${os}
+Browser:   ${browser}
+Language:  ${acceptLanguage}
+Referer:   ${referer}
+Timestamp: ${timestamp}`;
 
     if (resend) {
       const { error } = await resend.emails.send({
@@ -81,21 +178,8 @@ export async function POST(request: NextRequest) {
         to: 'contacto@ramdel.dev',
         replyTo: validatedData.email,
         subject: `[Portfolio] ${validatedData.subject}`,
-        text: `
-New contact form submission from ramdel.dev
-
-Name:    ${validatedData.name}
-Email:   ${validatedData.email}
-Subject: ${validatedData.subject}
-
-Message:
-${validatedData.message}
-
----
-IP:        ${clientIP}
-User-Agent: ${userAgent}
-Timestamp: ${new Date().toISOString()}
-        `.trim(),
+        html: htmlBody,
+        text: textBody,
       });
 
       if (error) {
@@ -110,8 +194,11 @@ Timestamp: ${new Date().toISOString()}
       console.log('[dev] Contact form submission (email not sent):', {
         ...validatedData,
         clientIP,
-        userAgent,
-        timestamp: new Date().toISOString(),
+        os,
+        browser,
+        acceptLanguage,
+        referer,
+        timestamp,
       });
     }
 
