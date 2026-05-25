@@ -55,7 +55,8 @@ export default function Navigation() {
   const t = useTranslations('Navigation');
   const locale = useLocale();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);         // desktop drawer only
+  const [isMobileFormOpen, setIsMobileFormOpen] = useState(false); // mobile inline form
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -70,8 +71,17 @@ export default function Navigation() {
     { name: t('work'), href: `/${locale}/#case-studies` },
   ];
 
+  // Desktop: toggles the floating drawer
   const handleSayHello = () => {
     setIsDrawerOpen((prev) => !prev);
+    setIsMenuOpen(false);
+  };
+
+  // Mobile: toggles the inline form — completely independent from the desktop drawer
+  // so ContactDrawer never receives isOpen=true on mobile and never registers its
+  // document-level mousedown listener against the mobile form's inputs.
+  const handleSayHelloMobile = () => {
+    setIsMobileFormOpen((prev) => !prev);
     setIsMenuOpen(false);
   };
 
@@ -138,7 +148,7 @@ export default function Navigation() {
             <button
               onClick={() => {
                 setIsMenuOpen(!isMenuOpen);
-                setIsDrawerOpen(false);
+                setIsMobileFormOpen(false);
               }}
               className="text-zinc-400 hover:text-zinc-200 transition-colors"
             >
@@ -161,7 +171,7 @@ export default function Navigation() {
               </a>
             ))}
             <button
-              onClick={handleSayHello}
+              onClick={handleSayHelloMobile}
               className="w-full mt-2 text-left px-2 py-2.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
             >
               {t('say_hello')} ↓
@@ -171,7 +181,7 @@ export default function Navigation() {
       </nav>
 
       {/* Mobile contact form — inline below mobile menu */}
-      {isDrawerOpen && (
+      {isMobileFormOpen && (
         <div className="md:hidden border-t border-zinc-800 px-6 py-6">
           <p className="text-sm font-medium text-zinc-200 mb-4">
             {t('say_hello')}
