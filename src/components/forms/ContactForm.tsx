@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -35,12 +35,9 @@ export default function ContactForm() {
     setSubmitStatus('idle');
 
     try {
-      // Simulated form submission - replace with actual API call
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
@@ -50,92 +47,82 @@ export default function ContactForm() {
       } else {
         setSubmitStatus('error');
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const inputClass =
+    'w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors text-sm font-sans';
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Name Field */}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-terminal-white mb-2">
-          {t('name')} *
+        <label htmlFor="name" className="block text-sm font-medium text-zinc-300 mb-1.5">
+          {t('name')}
         </label>
         <input
           type="text"
           id="name"
           {...register('name')}
-          className="w-full px-3 py-2 bg-terminal-black border border-terminal-green/30 rounded-md text-terminal-white placeholder-terminal-gray focus:outline-none focus:border-terminal-green focus:ring-1 focus:ring-terminal-green"
-          placeholder="Your name"
+          className={inputClass}
+          placeholder={t('name_placeholder')}
         />
-        {errors.name && (
-          <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
-        )}
+        {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
       </div>
 
-      {/* Email Field */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-terminal-white mb-2">
-          {t('email')} *
+        <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-1.5">
+          {t('email')}
         </label>
         <input
           type="email"
           id="email"
           {...register('email')}
-          className="w-full px-3 py-2 bg-terminal-black border border-terminal-green/30 rounded-md text-terminal-white placeholder-terminal-gray focus:outline-none focus:border-terminal-green focus:ring-1 focus:ring-terminal-green"
-          placeholder="your.email@example.com"
+          className={inputClass}
+          placeholder={t('email_placeholder')}
         />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>}
       </div>
 
-      {/* Subject Field */}
       <div>
-        <label htmlFor="subject" className="block text-sm font-medium text-terminal-white mb-2">
-          Subject *
+        <label htmlFor="subject" className="block text-sm font-medium text-zinc-300 mb-1.5">
+          {t('subject')}
         </label>
         <input
           type="text"
           id="subject"
           {...register('subject')}
-          className="w-full px-3 py-2 bg-terminal-black border border-terminal-green/30 rounded-md text-terminal-white placeholder-terminal-gray focus:outline-none focus:border-terminal-green focus:ring-1 focus:ring-terminal-green"
-          placeholder="DevSecOps opportunity, collaboration, etc."
+          className={inputClass}
+          placeholder={t('subject_placeholder')}
         />
-        {errors.subject && (
-          <p className="mt-1 text-sm text-red-400">{errors.subject.message}</p>
-        )}
+        {errors.subject && <p className="mt-1 text-xs text-red-400">{errors.subject.message}</p>}
       </div>
 
-      {/* Message Field */}
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-terminal-white mb-2">
-          {t('message')} *
+        <label htmlFor="message" className="block text-sm font-medium text-zinc-300 mb-1.5">
+          {t('message')}
         </label>
         <textarea
           id="message"
-          rows={5}
+          rows={4}
           {...register('message')}
-          className="w-full px-3 py-2 bg-terminal-black border border-terminal-green/30 rounded-md text-terminal-white placeholder-terminal-gray focus:outline-none focus:border-terminal-green focus:ring-1 focus:ring-terminal-green resize-vertical"
-          placeholder="Tell me about the opportunity, project, or how we can collaborate..."
+          className={`${inputClass} resize-none`}
+          placeholder={t('message_placeholder')}
         />
-        {errors.message && (
-          <p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
-        )}
+        {errors.message && <p className="mt-1 text-xs text-red-400">{errors.message.message}</p>}
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full flex items-center justify-center px-4 py-3 bg-terminal-green text-terminal-black font-semibold rounded-md hover:bg-terminal-cyan disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full flex items-center justify-center px-4 py-3 bg-zinc-900 border border-zinc-700 text-zinc-100 font-semibold rounded-lg hover:bg-zinc-800 hover:border-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
       >
         {isSubmitting ? (
           <>
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-terminal-black mr-2"></div>
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             {t('sending')}
           </>
         ) : (
@@ -146,17 +133,16 @@ export default function ContactForm() {
         )}
       </button>
 
-      {/* Status Messages */}
       {submitStatus === 'success' && (
-        <div className="flex items-center text-terminal-green bg-terminal-green/10 border border-terminal-green/30 rounded-md p-3">
-          <CheckCircle className="h-5 w-5 mr-2" />
+        <div className="flex items-center text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-lg p-3 text-sm">
+          <CheckCircle className="h-4 w-4 mr-2 shrink-0" />
           <span>{t('success')}</span>
         </div>
       )}
 
       {submitStatus === 'error' && (
-        <div className="flex items-center text-red-400 bg-red-400/10 border border-red-400/30 rounded-md p-3">
-          <AlertCircle className="h-5 w-5 mr-2" />
+        <div className="flex items-center text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg p-3 text-sm">
+          <AlertCircle className="h-4 w-4 mr-2 shrink-0" />
           <span>{t('error')}</span>
         </div>
       )}

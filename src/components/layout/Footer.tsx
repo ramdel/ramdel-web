@@ -1,60 +1,62 @@
-import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import { Github, Linkedin, MapPin } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import LanguageSelector from './LanguageSelector';
 
-export default function Footer() {
+export default async function Footer() {
   const currentYear = new Date().getFullYear();
-  
+  const t = await getTranslations('Footer');
+
   return (
-    <footer className="border-t border-terminal-green/30 bg-terminal-black/50 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-terminal-cyan font-semibold mb-4">Connect</h3>
-            <div className="space-y-2 text-sm text-terminal-gray">
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4" />
-                <span>Montreal, QC 🍁</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4" />
-                <span>contacto@ramdel.dev</span>
-              </div>
-            </div>
+    <footer className="border-t border-zinc-800/60 py-10">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-5">
+          {/* Left: brand + location */}
+          <div className="flex flex-col items-center md:items-start gap-1">
+            <span className="text-sm font-semibold text-zinc-300">
+              ramdel<span className="text-cyan-400">.dev</span>
+            </span>
+            <span className="flex items-center gap-1 text-xs text-zinc-600">
+              <MapPin className="h-3 w-3" />
+              {t('location')}
+            </span>
           </div>
 
-          {/* Social Links */}
-          <div>
-            <h3 className="text-terminal-cyan font-semibold mb-4">Social</h3>
-            <div className="flex space-x-4">
-              <a 
-                href="https://github.com/ramdel" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-terminal-green hover:text-terminal-cyan transition-colors"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a 
-                href="https://linkedin.com/in/ramdel" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-terminal-green hover:text-terminal-cyan transition-colors"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-            </div>
+          {/* Center: socials + upwork */}
+          <div className="flex items-center gap-5">
+            <a
+              href="https://github.com/ramdel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-500 hover:text-zinc-300 transition-colors"
+              aria-label="GitHub"
+            >
+              <Github className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/ramdel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-500 hover:text-zinc-300 transition-colors"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.upwork.com/freelancers/~ramdel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
+            >
+              {t('upwork')}
+            </a>
           </div>
 
-          {/* Copyright */}
-          <div>
-            <div className="text-sm text-terminal-gray">
-              <p className="terminal-prompt">
-                Built with love from Montreal, QC 🍁
-              </p>
-              <p className="mt-2">
-                © {currentYear} Mario de Jesus. All rights reserved.
-              </p>
-            </div>
+          {/* Right: lang selector + copyright */}
+          <div className="flex flex-col items-center md:items-end gap-1">
+            <LanguageSelector />
+            <span className="text-xs text-zinc-700">
+              © {currentYear} {t('copyright')}
+            </span>
           </div>
         </div>
       </div>
