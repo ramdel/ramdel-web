@@ -12,7 +12,7 @@ const securityHeaders = [
       `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https:",
-      "font-src 'self'",
+      "font-src 'self' data:",
       "connect-src 'self' https://www.google-analytics.com https://analytics.google.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
