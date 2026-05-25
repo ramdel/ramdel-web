@@ -1,16 +1,13 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
 import { z } from 'zod';
 
-// AWS SES configuration (opcional - para cuando lo configures)
-// import AWS from 'aws-sdk';
-// 
-// const ses = new AWS.SES({
-//   region: process.env.AWS_REGION || 'us-east-2',
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-// });
+// Resend client — only instantiated when API key is present
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 // Rate limiter — only active when Upstash env vars are present
 const ratelimit =
@@ -29,7 +26,14 @@ const contactSchema = z.object({
   message: z.string().min(10).max(2000),
 });
 
-const allowedOrigins = ['https://ramdel.dev', 'https://www.ramdel.dev'];
+const allowedOrigins = [
+  'https://ramdel.dev',
+  'https://www.ramdel.dev',
+  // Allow localhost in development
+  ...(process.env.NODE_ENV === 'development'
+    ? ['http://localhost:3000', 'http://localhost:3001']
+    : []),
+];
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Rate limiting (skipped in dev if Upstash is not configured)
+    // Rate limiting (skipped if Upstash is not configured)
     if (ratelimit) {
       const ip =
         request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
@@ -71,69 +75,59 @@ export async function POST(request: NextRequest) {
     const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
-    // For now, we'll simulate email sending
-    // In production, you'd use AWS SES here
-    console.log('Contact form submission:', {
-      ...validatedData,
-      clientIP,
-      userAgent,
-      timestamp: new Date().toISOString(),
-    });
+    if (resend) {
+      const { error } = await resend.emails.send({
+        from: 'Portfolio Contact <no-reply@ramdel.dev>',
+        to: 'contacto@ramdel.dev',
+        replyTo: validatedData.email,
+        subject: `[Portfolio] ${validatedData.subject}`,
+        text: `
+New contact form submission from ramdel.dev
 
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+Name:    ${validatedData.name}
+Email:   ${validatedData.email}
+Subject: ${validatedData.subject}
 
-    // TODO: Replace with actual AWS SES email sending
-    // const emailParams = {
-    //   Destination: {
-    //     ToAddresses: ['contacto@ramdel.dev'],
-    //   },
-    //   Message: {
-    //     Body: {
-    //       Text: {
-    //         Data: `
-    //           New contact form submission:
-    //
-    //           Name: ${validatedData.name}
-    //           Email: ${validatedData.email}
-    //           Subject: ${validatedData.subject}
-    //
-    //           Message:
-    //           ${validatedData.message}
-    //
-    //           ---
-    //           Client IP: ${clientIP}
-    //           User Agent: ${userAgent}
-    //           Timestamp: ${new Date().toISOString()}
-    //         `,
-    //       },
-    //     },
-    //     Subject: {
-    //       Data: `Contact Form: ${validatedData.subject}`,
-    //     },
-    //   },
-    //   Source: 'no-reply@ramdel.dev',
-    //   ReplyToAddresses: [validatedData.email],
-    // };
+Message:
+${validatedData.message}
 
-    // await ses.sendEmail(emailParams).promise();
+---
+IP:        ${clientIP}
+User-Agent: ${userAgent}
+Timestamp: ${new Date().toISOString()}
+        `.trim(),
+      });
 
-    return NextResponse.json(
-      { message: 'Message sent successfully' },
-      { status: 200 }
-    );
+      if (error) {
+        console.error('Resend error:', error);
+        return NextResponse.json(
+          { error: 'Failed to send message. Please try again later.' },
+          { status: 500 }
+        );
+      }
+    } else {
+      // Fallback for local dev without RESEND_API_KEY
+      console.log('[dev] Contact form submission (email not sent):', {
+        ...validatedData,
+        clientIP,
+        userAgent,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error('Contact form error:', error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { message: 'Invalid form data', errors: error.issues },
+        { error: 'Invalid form data', details: error.issues },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
