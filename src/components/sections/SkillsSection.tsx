@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Cloud, GitBranch, Shield, Code2 } from 'lucide-react';
+import { FadeInUp, StaggerContainer, StaggerItem } from '@/components/ui/motion-wrappers';
 
 const skillGroups = [
   {
@@ -30,17 +31,20 @@ export default function SkillsSection() {
   return (
     <section id="skills" className="py-24 border-t border-zinc-800/60">
       <div className="max-w-6xl mx-auto px-6">
-        <p className="section-label mb-4">{t('section_label')}</p>
-        <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-12">
-          {t('title')}
-        </h2>
+        <FadeInUp>
+          <p className="section-label mb-4">{t('section_label')}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-12">
+            {t('title')}
+          </h2>
+        </FadeInUp>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {skillGroups.map((group) => {
             const Icon = group.icon;
             return (
-              <div
+              <StaggerItem
                 key={group.nameKey}
+                hover
                 className="bg-card border border-zinc-800 rounded-2xl p-6 card-glow"
               >
                 <div className="flex items-center gap-3 mb-5">
@@ -56,10 +60,10 @@ export default function SkillsSection() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

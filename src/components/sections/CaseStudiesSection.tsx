@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { FadeInUp, StaggerContainer, StaggerItem } from '@/components/ui/motion-wrappers';
 
 export default function CaseStudiesSection() {
   const t = useTranslations('CaseStudies');
@@ -73,18 +74,21 @@ export default function CaseStudiesSection() {
   return (
     <section id="case-studies" className="py-24 border-t border-zinc-800/60">
       <div className="max-w-6xl mx-auto px-6">
-        <p className="section-label mb-4">{t('section_label')}</p>
-        <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-3">
-          {t('title')}
-        </h2>
-        <p className="text-zinc-500 text-[0.9375rem] mb-12 max-w-2xl">
-          {t('subtitle')}
-        </p>
+        <FadeInUp>
+          <p className="section-label mb-4">{t('section_label')}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-3">
+            {t('title')}
+          </h2>
+          <p className="text-zinc-500 text-[0.9375rem] mb-12 max-w-2xl">
+            {t('subtitle')}
+          </p>
+        </FadeInUp>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {caseStudies.map((cs) => (
-            <div
+            <StaggerItem
               key={cs.slug}
+              hover
               className="bg-card border border-zinc-800 rounded-2xl p-6 flex flex-col card-glow"
             >
               {/* Category */}
@@ -124,9 +128,9 @@ export default function CaseStudiesSection() {
                 {t('read_more')}
                 <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
