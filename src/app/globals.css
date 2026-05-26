@@ -71,34 +71,4 @@
     font-family: var(--font-family-sans);
   }
 
-  /* Contact drawer slide-down animation */
-  .drawer-enter {
-    animation: drawerSlideDown 0.3s ease forwards;
-  }
-
-  .drawer-exit {
-    animation: drawerSlideUp 0.2s ease forwards;
-  }
-}
-
-@keyframes drawerSlideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes drawerSlideUp {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
 }
