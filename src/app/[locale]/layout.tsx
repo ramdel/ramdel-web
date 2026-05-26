@@ -4,6 +4,8 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import '../globals.css';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
+import CookieBanner from '@/components/ui/CookieBanner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -51,6 +53,8 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
+          <CookieBanner />
+          <GoogleAnalytics />
         </NextIntlClientProvider>
       </body>
     </html>

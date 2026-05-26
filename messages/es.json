@@ -246,5 +246,11 @@
     "location": "Montreal, QC",
     "copyright": "Mario de Jesus · Todos los derechos reservados",
     "upwork": "Perfil en Upwork"
+  },
+  "CookieBanner": {
+    "title": "Este sitio usa cookies",
+    "message": "Usamos Google Analytics para entender cómo los visitantes encuentran este sitio y qué canales generan más interés. No se comparten datos personales con terceros.",
+    "accept": "Aceptar cookies",
+    "decline": "No, gracias"
   }
 }
