@@ -9,14 +9,16 @@ export default function GoogleAnalytics() {
   const [consent, setConsent] = useState(false);
 
   useEffect(() => {
-    // Load immediately if already accepted in a previous visit
-    if (localStorage.getItem('analytics-consent') === 'accepted') {
-      setConsent(true);
-    }
-
-    // Load when the user accepts during this session
+    // Register listener first — setConsent only ever runs inside this callback
     const handler = () => setConsent(true);
     window.addEventListener('analytics-consent-granted', handler);
+
+    // If already accepted in a previous visit, fire through the same event path
+    // so setState is always called from a callback, never directly in the effect body
+    if (localStorage.getItem('analytics-consent') === 'accepted') {
+      window.dispatchEvent(new Event('analytics-consent-granted'));
+    }
+
     return () => window.removeEventListener('analytics-consent-granted', handler);
   }, []);
 
