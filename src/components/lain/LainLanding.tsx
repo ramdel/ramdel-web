@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowDown, ArrowRight, Cloud, GitBranch, ShieldCheck, Terminal } from 'lucide-react';
 import AboutSection from '@/components/sections/AboutSection';
-import ContactForm from '@/components/forms/ContactForm';
+import LainContactAction from './LainContactAction';
+import LainMetrics from './LainMetrics';
 import LainVisual from './LainVisual';
 import './lain.css';
 
@@ -56,11 +57,7 @@ export default function LainLanding() {
         <div className="lain-side-rail" aria-hidden="true">RAMDEL.DEV — HUMAN SYSTEMS / DIGITAL WORLDS</div>
       </section>
 
-      <div className="lain-metrics" aria-label={hero('tagline')}>
-        <div className="lain-container lain-metrics-grid">
-          {metrics.map(({ value, label }) => <div className="lain-metric" key={label}><strong>{value}</strong><span>{label}</span></div>)}
-        </div>
-      </div>
+      <LainMetrics metrics={metrics} description={hero('tagline')} />
 
       <section id="skills" className="lain-section lain-services">
         <div className="lain-container">
@@ -92,12 +89,12 @@ export default function LainLanding() {
         </div>
       </section>
 
-      <AboutSection />
+      <AboutSection sectionLabel={t('about_label')} variant="lain" />
 
       <section id="contact" className="lain-section lain-contact">
         <div className="lain-container lain-contact-grid">
-          <div className="lain-contact-copy"><p className="lain-kicker">[ {t('contact_label')} ]</p><h2>{t('contact_title')}</h2><p>{t('contact_intro')}</p><div className="lain-contact-portal" aria-hidden="true"><span>CONNECTION READY</span><span>◇</span></div></div>
-          <div className="lain-contact-form"><ContactForm /></div>
+          <div className="lain-contact-copy"><p className="lain-kicker">{t('contact_label')}</p><h2>{t('contact_title')}</h2><p>{t('contact_intro')}</p></div>
+          <LainContactAction label={t('contact_action')} />
         </div>
       </section>
     </div>

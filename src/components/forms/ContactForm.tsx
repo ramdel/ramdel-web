@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,28 +8,24 @@ import { z } from 'zod';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import * as motion from 'motion/react-client';
 import { AnimatePresence } from 'motion/react';
+import { trackContactEvent, type ContactSource } from '@/lib/analytics';
 
-const contactSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
-  subject: z.string().min(5, 'Subject must be at least 5 characters'),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
-});
-
-type ContactFormData = z.infer<typeof contactSchema>;
+type ContactFormData = { name: string; email: string; subject: string; message: string };
 
 /** Animated inline error beneath a field */
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   return (
     <AnimatePresence>
       {message && (
         <motion.p
           key={message}
+          id={id}
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
-          className="mt-1 text-xs text-red-400"
+          className="contact-field-error mt-1 text-xs text-red-400"
+          role="alert"
         >
           {message}
         </motion.p>
@@ -38,10 +34,18 @@ function FieldError({ message }: { message?: string }) {
   );
 }
 
-export default function ContactForm() {
+export default function ContactForm({ source = 'menu' }: { source?: ContactSource }) {
   const t = useTranslations('Contact');
+  const formId = useId();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'local' | 'error'>('idle');
+
+  const contactSchema = z.object({
+    name: z.string().min(2, t('name_error')),
+    email: z.string().email(t('email_error')),
+    subject: z.string().min(5, t('subject_error')),
+    message: z.string().min(10, t('message_error')),
+  });
 
   const {
     register,
@@ -64,13 +68,18 @@ export default function ContactForm() {
       });
 
       if (response.ok) {
-        setSubmitStatus('success');
+        const result: { delivered?: boolean } = await response.json();
+        const outcome = result.delivered === true ? 'sent' : 'local_only';
+        setSubmitStatus(result.delivered === true ? 'success' : 'local');
+        trackContactEvent('contact_submit', source, outcome);
         reset();
       } else {
         setSubmitStatus('error');
+        trackContactEvent('contact_submit', source, 'failed');
       }
     } catch {
       setSubmitStatus('error');
+      trackContactEvent('contact_submit', source, 'failed');
     } finally {
       setIsSubmitting(false);
     }
@@ -80,61 +89,69 @@ export default function ContactForm() {
     'w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors text-sm font-sans';
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="contact-form space-y-4">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-zinc-300 mb-1.5">
+        <label htmlFor={`${formId}-name`} className="contact-label block text-sm font-medium text-zinc-300 mb-1.5">
           {t('name')}
         </label>
         <input
           type="text"
-          id="name"
+          id={`${formId}-name`}
           {...register('name')}
-          className={inputClass}
+          aria-invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? `${formId}-name-error` : undefined}
+          className={`contact-field ${inputClass}`}
           placeholder={t('name_placeholder')}
         />
-        <FieldError message={errors.name?.message} />
+        <FieldError id={`${formId}-name-error`} message={errors.name?.message} />
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-1.5">
+        <label htmlFor={`${formId}-email`} className="contact-label block text-sm font-medium text-zinc-300 mb-1.5">
           {t('email')}
         </label>
         <input
           type="email"
-          id="email"
+          id={`${formId}-email`}
           {...register('email')}
-          className={inputClass}
+          aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? `${formId}-email-error` : undefined}
+          className={`contact-field ${inputClass}`}
           placeholder={t('email_placeholder')}
         />
-        <FieldError message={errors.email?.message} />
+        <FieldError id={`${formId}-email-error`} message={errors.email?.message} />
       </div>
 
       <div>
-        <label htmlFor="subject" className="block text-sm font-medium text-zinc-300 mb-1.5">
+        <label htmlFor={`${formId}-subject`} className="contact-label block text-sm font-medium text-zinc-300 mb-1.5">
           {t('subject')}
         </label>
         <input
           type="text"
-          id="subject"
+          id={`${formId}-subject`}
           {...register('subject')}
-          className={inputClass}
+          aria-invalid={Boolean(errors.subject)}
+          aria-describedby={errors.subject ? `${formId}-subject-error` : undefined}
+          className={`contact-field ${inputClass}`}
           placeholder={t('subject_placeholder')}
         />
-        <FieldError message={errors.subject?.message} />
+        <FieldError id={`${formId}-subject-error`} message={errors.subject?.message} />
       </div>
 
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-zinc-300 mb-1.5">
+        <label htmlFor={`${formId}-message`} className="contact-label block text-sm font-medium text-zinc-300 mb-1.5">
           {t('message')}
         </label>
         <textarea
-          id="message"
+          id={`${formId}-message`}
           rows={4}
           {...register('message')}
-          className={`${inputClass} resize-none`}
+          aria-invalid={Boolean(errors.message)}
+          aria-describedby={errors.message ? `${formId}-message-error` : undefined}
+          className={`contact-field ${inputClass} resize-none`}
           placeholder={t('message_placeholder')}
         />
-        <FieldError message={errors.message?.message} />
+        <FieldError id={`${formId}-message-error`} message={errors.message?.message} />
       </div>
 
       {/* Send button with press feedback */}
@@ -142,7 +159,7 @@ export default function ContactForm() {
         type="submit"
         disabled={isSubmitting}
         whileTap={!isSubmitting ? { scale: 0.97 } : undefined}
-        className="w-full flex items-center justify-center px-4 py-3 bg-zinc-900 border border-zinc-700 text-zinc-100 font-semibold rounded-lg hover:bg-zinc-800 hover:border-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
+        className="contact-submit w-full flex items-center justify-center px-4 py-3 bg-zinc-900 border border-zinc-700 text-zinc-100 font-semibold rounded-lg hover:bg-zinc-800 hover:border-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
       >
         {isSubmitting ? (
           <>
@@ -159,17 +176,18 @@ export default function ContactForm() {
 
       {/* Submit status banners */}
       <AnimatePresence>
-        {submitStatus === 'success' && (
+        {(submitStatus === 'success' || submitStatus === 'local') && (
           <motion.div
-            key="success"
+            key={submitStatus}
             initial={{ opacity: 0, y: 6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.97 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="flex items-center text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-lg p-3 text-sm"
+            className="contact-status contact-status-success flex items-center text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-lg p-3 text-sm"
+            role="status"
           >
             <CheckCircle className="h-4 w-4 mr-2 shrink-0" />
-            <span>{t('success')}</span>
+            <span>{t(submitStatus === 'local' ? 'local_success' : 'success')}</span>
           </motion.div>
         )}
 
@@ -180,7 +198,8 @@ export default function ContactForm() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.97 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="flex items-center text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg p-3 text-sm"
+            className="contact-status contact-status-error flex items-center text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg p-3 text-sm"
+            role="alert"
           >
             <AlertCircle className="h-4 w-4 mr-2 shrink-0" />
             <span>{t('error')}</span>

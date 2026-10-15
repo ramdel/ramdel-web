@@ -168,24 +168,65 @@ body:has(.lain-page) header button:focus-visible {
 .lain-metrics { background:#33354f; color:white; }
 .lain-metrics-grid { display:grid; grid-template-columns:repeat(4,1fr); padding-block:2rem; }
 .lain-metric { display:flex; flex-direction:column; align-items:center; text-align:center; gap:.5rem; border-right:1px solid #ffffff35; padding: .5rem 1rem; }
-.lain-metric:last-child { border-right:0; }.lain-metric strong { font-weight:400; font-size:clamp(1.5rem,3vw,2.5rem); }.lain-metric span { color:#dedde9; text-transform:uppercase; letter-spacing:.1em; font-size:.67rem; line-height:1.5; }
+.lain-metric:last-child { border-right:0; }.lain-metric strong { font-weight:400; font-size:clamp(1.5rem,3vw,2.5rem); }.lain-metric > span { color:#dedde9; text-transform:uppercase; letter-spacing:.1em; font-size:.67rem; line-height:1.5; }
 .lain-section { padding:6rem 0; border-bottom:1px solid #c9c8d5; }
 .lain-section-heading { display:flex; align-items:end; justify-content:space-between; gap:2rem; margin-bottom:2.5rem; }.lain-section-heading > p { max-width:27rem; color:#5b5e73; font-size:.84rem; line-height:1.7; }
-.lain-kicker { color:#6659bd; margin-bottom:1.1rem; font-weight:700; }.lain-section h2,.lain-page #about h2 { color:#202137; font-size:clamp(1.7rem,3.2vw,3rem); line-height:1.25; font-weight:500; letter-spacing:-.04em; }
+.lain-kicker { color:#6659bd; margin-bottom:1.1rem; font-weight:700; }.lain-section h2,.lain-about h2 { color:#202137; font-size:clamp(1.7rem,3.2vw,3rem); line-height:1.25; font-weight:500; letter-spacing:-.04em; }
 .lain-service-grid { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #c8c6d4; }.lain-service-card { min-height:260px; padding:1.6rem; position:relative; border-right:1px solid #c8c6d4; background:#f8f7fb; }.lain-service-card:last-child { border-right:0; }.lain-service-card svg { color:#5e5c88; }.lain-card-index { position:absolute; top:1.7rem; right:1.3rem; color:#67697c; }.lain-service-card h3 { font-size:.95rem; font-weight:700; margin:4rem 0 .8rem; line-height:1.4; text-transform:uppercase; }.lain-service-card p { font-size:.75rem; line-height:1.8; color:#5b5e73; }
 .lain-manifesto { color:#e7e7f2; background:#30334e; padding:2.5rem 0; }.lain-manifesto .lain-container { display:flex; align-items:center; gap:2rem; }.lain-manifesto span:first-child { color:#aea4f3; font-size:.78rem; white-space:nowrap; }.lain-manifesto p { max-width:45rem; line-height:1.7; font-size:.88rem; }.lain-manifesto-mark { font-size:3rem; margin-left:auto; color:#bbb6e8; }
 .lain-work-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.1rem; }.lain-work-card { display:flex; flex-direction:column; min-height:360px; padding:1.2rem; border:1px solid #c8c6d4; background:#f9f8fc; transition: border-color .2s,background .2s; }.lain-work-card:hover { border-color:#6659bd; background:white; }.lain-work-top { display:flex; justify-content:space-between; gap:.5rem; color:#686b81; line-height:1.5; }.lain-work-figure { display:flex; align-items:center; justify-content:center; height:130px; margin:1.3rem 0; border:1px solid #cecadf; background:repeating-linear-gradient(90deg,transparent 0 27px,#8b80bb21 28px 29px),linear-gradient(130deg,#d2cde7,#eae8f3); overflow:hidden; }.lain-work-figure span { font-size:5rem; line-height:1; color:#7370a638; }.lain-work-card strong { font-size:1rem; line-height:1.4; text-transform:uppercase; }.lain-work-subtitle { display:block; color:#61637a; font-size:.76rem; line-height:1.6; margin-top:.5rem; flex:1; }.lain-work-link { display:flex; align-items:center; gap:.5rem; color:#5d52ad; margin-top:1.5rem; font-size:.67rem; }
-.lain-page #about { background:#eae9f2; border-color:#c8c6d4; font-family:var(--font-mono),monospace; }.lain-page #about .section-label { color:#6659bd; }.lain-page #about .text-zinc-100,.lain-page #about .text-zinc-200 { color:#202137; }.lain-page #about .text-zinc-400,.lain-page #about .text-zinc-500 { color:#4e526a; }.lain-page #about .bg-card { background:#f9f8fc; }.lain-page #about .border-zinc-800 { border-color:#c8c6d4; }.lain-page #about .text-cyan-400 { color:#6659bd; }.lain-page #about .rounded-2xl { border-radius:0; }
+.lain-about {
+  padding: 6rem 0;
+  border-top: 1px solid #c8c6d4;
+  background: #eae9f2;
+  font-family: var(--font-mono), monospace;
+}
+.lain-about-heading { margin-bottom: 1.5rem; }
+.lain-about-bio { margin-bottom: 2rem; color: #4e526a; font-size: .94rem; line-height: 1.8; }
+.lain-highlight-icon { color: #6659bd; }
+.lain-highlight-title { color: #202137; font-size: .875rem; font-weight: 600; }
+.lain-highlight-copy { margin-top: .25rem; color: #4e526a; font-size: .82rem; line-height: 1.6; }
+.lain-experience-label { margin-bottom: 1.5rem; }
+.lain-experience-card {
+  padding: 1.5rem;
+  border: 1px solid #c8c6d4;
+  background: #f9f8fc;
+}
+.lain-experience-card-current { border-color: #8271c7; background: #fff; }
+.lain-experience-current { display: flex; align-items: center; gap: .5rem; margin-bottom: .85rem; }
+.lain-experience-dot { display: block; flex: none; width: .45rem; height: .45rem; background: #6659bd; transform-origin: center; }
+.lain-experience-status { color: #6659bd; font-size: .68rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.lain-experience-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1.25rem; margin-bottom: .75rem; }
+.lain-experience-title { color: #202137; font-size: .86rem; font-weight: 700; line-height: 1.45; text-transform: uppercase; }
+.lain-experience-company { margin-top: .2rem; color: #5d52ad; font-size: .8rem; }
+.lain-experience-period { color: #55596f; font-size: .69rem; line-height: 1.5; letter-spacing: .04em; }
+.lain-experience-description { color: #4e526a; font-size: .78rem; line-height: 1.75; }
 
 .lain-contact { background: #292e4b; color: #f4f1ff; }
 .lain-contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; }
 .lain-contact .lain-kicker { color: #b8a9f4; }
 .lain-contact h2 { color: #f4f1ff; }
 .lain-contact-copy > p:nth-of-type(2) { color: #d4d0e8; margin-top: 1.4rem; line-height: 1.8; max-width: 29rem; }
-.lain-contact-portal { display: flex; justify-content: space-between; align-items: center; max-width: 30rem; margin-top: 3rem; padding: 1.4rem; border: 1px solid #777197; font-size: .7rem; letter-spacing: .14em; color: #c8c0e4; }
-.lain-contact-portal span:last-child { font-size: 2rem; }
-.lain-contact-form { border: 1px solid #777197; padding: 2rem; background: #323755; }
-.lain-contact-form input, .lain-contact-form textarea { color: #f4f1ff; }
+.lain-contact-action {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100%, 29rem);
+  min-height: 5rem;
+  padding: 1.3rem 1.5rem;
+  border: 1px solid #b9acd9;
+  background: #353a59;
+  color: #f4f1ff;
+  font: inherit;
+  font-size: .83rem;
+  letter-spacing: .08em;
+  text-align: left;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.lain-contact-action:hover { background: #484c71; border-color: #d4c8f5; }
+.lain-contact-action:focus-visible { outline: 2px solid #d4c8f5; outline-offset: 4px; }
 
 /* Shared navigation and footer receive the hybrid skin only on the landing page. */
 body:has(.lain-page) header {
@@ -267,27 +308,48 @@ body:has(.lain-page) footer .bg-zinc-900 {
 body:has(.lain-page) footer .hover\:bg-zinc-800:hover {
   background: #4a506f;
 }
-.lain-contact-form input,
-.lain-contact-form textarea {
-  color: #f4f1ff;
-  border-color: #85819c;
+body:has(.lain-page) .contact-drawer {
+  background: #f4f3f8;
+  border: 1px solid #a8a0bf;
+  border-radius: 0;
+  box-shadow: 0 18px 50px #20243e45;
+  color: #20243e;
+  font-family: var(--font-mono), monospace;
 }
-.lain-contact-form input::placeholder,
-.lain-contact-form textarea::placeholder {
-  color: #c5c0d1;
+body:has(.lain-page) .contact-drawer-heading { border-color: #c8c6d4; }
+body:has(.lain-page) .contact-drawer-heading p,
+body:has(.lain-page) .contact-label { color: #20243e; }
+body:has(.lain-page) .contact-drawer-heading p { font-size: .8rem; line-height: 1.6; }
+body:has(.lain-page) .contact-label { font-size: .76rem; }
+body:has(.lain-page) .contact-field {
+  background: #fff;
+  border: 1px solid #928aa8;
+  border-radius: 0;
+  color: #20243e;
+  font-family: var(--font-mono), monospace;
 }
-.lain-contact-form input:focus,
-.lain-contact-form textarea:focus {
-  border-color: #c9baff;
-  --tw-ring-color: #c9baff;
+body:has(.lain-page) .contact-field::placeholder { color: #616178; }
+body:has(.lain-page) .contact-field:focus {
+  border-color: #6659bd;
+  --tw-ring-color: #6659bd;
 }
-.lain-contact-form button[type="submit"]:hover {
-  border-color: #c9baff;
+body:has(.lain-page) .contact-submit {
+  background: #30334e;
+  border: 1px solid #30334e;
+  border-radius: 0;
+  color: #f7f5ff;
+  font-family: var(--font-mono), monospace;
 }
-.lain-contact-form button[type="submit"]:focus-visible {
-  outline: 2px solid #c9baff;
-  outline-offset: 4px;
+body:has(.lain-page) .contact-submit:hover { background: #514a82; border-color: #514a82; }
+body:has(.lain-page) .contact-submit:focus-visible,
+body:has(.lain-page) .contact-field:focus-visible {
+  outline: 2px solid #6659bd;
+  outline-offset: 2px;
 }
+body:has(.lain-page) .contact-field-error { color: #a02848; }
+body:has(.lain-page) .contact-status { border-radius: 0; }
+body:has(.lain-page) .contact-status-success { background: #e1f1ea; border-color: #8cbba7; color: #174d3a; }
+body:has(.lain-page) .contact-status-error { background: #f9e6ec; border-color: #d5a3b0; color: #8d2140; }
 
 @media (max-width: 900px) {
   .lain-hero, .lain-hero-content { min-height: 700px; }
@@ -321,7 +383,7 @@ body:has(.lain-page) footer .hover\:bg-zinc-800:hover {
   .lain-manifesto .lain-container { align-items: start; flex-direction: column; gap: 1rem; }
   .lain-manifesto-mark { display: none; }
   .lain-contact-grid { gap: 2rem; }
-  .lain-contact-form { padding: 1.2rem; }
+  .lain-contact-action { justify-self: start; }
 }
 
 @media (prefers-reduced-motion: reduce) {

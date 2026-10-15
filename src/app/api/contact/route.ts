@@ -183,28 +183,17 @@ Timestamp: ${timestamp}`;
       });
 
       if (error) {
-        console.error('Resend error:', error);
+        console.error('Contact email delivery failed');
         return NextResponse.json(
           { error: 'Failed to send message. Please try again later.' },
           { status: 500 }
         );
       }
-    } else {
-      // Fallback for local dev without RESEND_API_KEY
-      console.log('[dev] Contact form submission (email not sent):', {
-        ...validatedData,
-        clientIP,
-        os,
-        browser,
-        acceptLanguage,
-        referer,
-        timestamp,
-      });
     }
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true, delivered: Boolean(resend) }, { status: 200 });
   } catch (error) {
-    console.error('Contact form error:', error);
+    console.error('Contact form request failed');
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

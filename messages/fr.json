@@ -24,6 +24,7 @@
     "contact_label": "04 / Contact",
     "contact_title": "Construisons quelque chose de résilient.",
     "contact_intro": "Parlez-moi de votre plateforme, de ses risques ou du système que vous souhaitez améliorer.",
+    "contact_action": "Décrivez votre projet",
     "scroll": "Défiler pour explorer"
   },
   "Hero": {
@@ -260,7 +261,12 @@
     "message_placeholder": "Parlez-moi de l'opportunité, du projet ou de la façon dont nous pouvons collaborer...",
     "send": "Envoyer",
     "sending": "Envoi en cours...",
-    "success": "Message envoyé avec succès!",
+    "success": "Votre message a bien été envoyé.",
+    "local_success": "Votre demande a été traitée, mais aucun courriel n'a été envoyé car l'envoi n'est pas configuré.",
+    "name_error": "Le nom doit contenir au moins 2 caractères.",
+    "email_error": "Saisissez une adresse courriel valide.",
+    "subject_error": "Le sujet doit contenir au moins 5 caractères.",
+    "message_error": "Le message doit contenir au moins 10 caractères.",
     "error": "Une erreur s'est produite. Veuillez réessayer."
   },
   "Footer": {
@@ -270,7 +276,7 @@
   },
   "CookieBanner": {
     "title": "Ce site utilise des cookies",
-    "message": "Nous utilisons Google Analytics pour comprendre comment les visiteurs trouvent ce site et quels canaux suscitent le plus d'intérêt. Aucune donnée personnelle n'est partagée avec des tiers.",
+    "message": "Avec votre consentement, Google Analytics nous aide à comprendre les visites et le point d'accès au formulaire utilisé. Le contenu du formulaire n'est pas envoyé à Analytics.",
     "accept": "Accepter les cookies",
     "decline": "Non merci"
   }

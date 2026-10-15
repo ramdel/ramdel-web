@@ -24,6 +24,7 @@
     "contact_label": "04 / Connect",
     "contact_title": "Let us build something resilient.",
     "contact_intro": "Tell me about your platform, your risks or the system you want to improve.",
+    "contact_action": "Describe your project",
     "scroll": "Scroll to explore"
   },
   "Hero": {
@@ -260,7 +261,12 @@
     "message_placeholder": "Tell me about the opportunity, project, or how we can collaborate...",
     "send": "Send",
     "sending": "Sending...",
-    "success": "Message sent successfully!",
+    "success": "Your message was sent successfully.",
+    "local_success": "Your request was processed, but no email was sent because delivery is not configured.",
+    "name_error": "Name must be at least 2 characters.",
+    "email_error": "Enter a valid email address.",
+    "subject_error": "Subject must be at least 5 characters.",
+    "message_error": "Message must be at least 10 characters.",
     "error": "Something went wrong. Please try again."
   },
   "Footer": {
@@ -270,7 +276,7 @@
   },
   "CookieBanner": {
     "title": "This site uses cookies",
-    "message": "We use Google Analytics to understand how visitors find this site and which channels drive the most interest. No personal data is shared with third parties.",
+    "message": "With your consent, Google Analytics helps us understand visits and which contact entry point people use. Form content is not sent to Analytics.",
     "accept": "Accept cookies",
     "decline": "No thanks"
   }
