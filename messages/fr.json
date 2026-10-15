@@ -5,6 +5,27 @@
     "work": "Études de cas",
     "say_hello": "Bonjour"
   },
+  "Lain": {
+    "eyebrow": "DEVSECOPS / CLOUD / IA",
+    "hero_line1": "Infrastructure.",
+    "hero_line2": "Automatisation.",
+    "hero_line3": "Confiance dès la conception.",
+    "hero_note": "Les systèmes sont plus solides lorsque la sécurité fait partie de l’architecture, et non d’un ajout tardif.",
+    "services_label": "01 / Compétences",
+    "services_title": "De l’architecture à l’exploitation.",
+    "services_intro": "Une approche pratique pour construire, sécuriser et exploiter des systèmes en production.",
+    "service1_desc": "Architecture cloud pensée pour la résilience, les accès et les coûts.",
+    "service2_desc": "Pipelines de livraison reproductibles et infrastructure en tant que code.",
+    "service3_desc": "Contrôles de sécurité intégrés à chaque étape du cycle de vie.",
+    "service4_desc": "Automatisation et logiciels qui clarifient les opérations complexes.",
+    "work_label": "02 / Projets sélectionnés",
+    "work_intro": "Explorez cinq études de cas en détail.",
+    "about_label": "03 / La personne",
+    "contact_label": "04 / Contact",
+    "contact_title": "Construisons quelque chose de résilient.",
+    "contact_intro": "Parlez-moi de votre plateforme, de ses risques ou du système que vous souhaitez améliorer.",
+    "scroll": "Défiler pour explorer"
+  },
   "Hero": {
     "available": "Disponible pour des opportunités",
     "location": "Montréal, QC",

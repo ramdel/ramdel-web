@@ -5,6 +5,27 @@
     "work": "Casos de Estudio",
     "say_hello": "Hola"
   },
+  "Lain": {
+    "eyebrow": "DEVSECOPS / CLOUD / IA",
+    "hero_line1": "Infraestructura.",
+    "hero_line2": "Automatización.",
+    "hero_line3": "Confianza por diseño.",
+    "hero_note": "Los sistemas son más sólidos cuando la seguridad forma parte de la arquitectura, no se agrega al final.",
+    "services_label": "01 / Capacidades",
+    "services_title": "De la arquitectura a la operación.",
+    "services_intro": "Un enfoque práctico para construir, proteger y operar sistemas en producción.",
+    "service1_desc": "Arquitectura cloud diseñada para resiliencia, acceso y costos.",
+    "service2_desc": "Pipelines de entrega reproducibles e infraestructura como código.",
+    "service3_desc": "Controles de seguridad integrados en todo el ciclo de vida.",
+    "service4_desc": "Automatización y software que simplifican operaciones complejas.",
+    "work_label": "02 / Trabajo seleccionado",
+    "work_intro": "Explora cinco casos de estudio en detalle.",
+    "about_label": "03 / La persona",
+    "contact_label": "04 / Conectar",
+    "contact_title": "Construyamos algo resiliente.",
+    "contact_intro": "Cuéntame sobre tu plataforma, sus riesgos o el sistema que quieres mejorar.",
+    "scroll": "Desliza para explorar"
+  },
   "Hero": {
     "available": "Disponible para oportunidades",
     "location": "Montreal, QC",

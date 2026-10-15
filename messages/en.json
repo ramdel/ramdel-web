@@ -5,6 +5,27 @@
     "work": "Case Studies",
     "say_hello": "Say Hello"
   },
+  "Lain": {
+    "eyebrow": "DEVSECOPS / CLOUD / AI",
+    "hero_line1": "Infrastructure.",
+    "hero_line2": "Automation.",
+    "hero_line3": "Trust by design.",
+    "hero_note": "Systems are stronger when security is part of the architecture, not an afterthought.",
+    "services_label": "01 / Capabilities",
+    "services_title": "From architecture to operation.",
+    "services_intro": "A practical approach to building, securing and operating production systems.",
+    "service1_desc": "Cloud architecture designed around resilience, access and cost.",
+    "service2_desc": "Repeatable delivery pipelines and infrastructure as code.",
+    "service3_desc": "Security controls embedded across the lifecycle.",
+    "service4_desc": "Automation and software that make complex operations clearer.",
+    "work_label": "02 / Selected work",
+    "work_intro": "Explore five case studies in detail.",
+    "about_label": "03 / The engineer",
+    "contact_label": "04 / Connect",
+    "contact_title": "Let us build something resilient.",
+    "contact_intro": "Tell me about your platform, your risks or the system you want to improve.",
+    "scroll": "Scroll to explore"
+  },
   "Hero": {
     "available": "Available for opportunities",
     "location": "Montreal, QC",

@@ -36,6 +36,9 @@ const securityHeaders = [
 
 const nextConfig = {
   trailingSlash: true,
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     unoptimized: true
   },
