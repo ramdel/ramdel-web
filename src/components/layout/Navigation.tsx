@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { Menu, X, Globe, ChevronDown } from 'lucide-react';
 import ContactDrawer from '@/components/ui/ContactDrawer';
 import ContactForm from '@/components/forms/ContactForm';
+import { trackContactEvent, type ContactSource } from '@/lib/analytics';
+import { OPEN_CONTACT_EVENT } from '@/lib/contactEvents';
 
 function LanguageSelector() {
   const locale = useLocale();
@@ -54,9 +56,13 @@ function LanguageSelector() {
 export default function Navigation() {
   const t = useTranslations('Navigation');
   const locale = useLocale();
+  const pathname = usePathname();
+  const isLanding = pathname === `/${locale}` || pathname === `/${locale}/`;
+  const isLainPage = isLanding || pathname.startsWith(`/${locale}/case-studies/`);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);         // desktop drawer only
-  const [isMobileFormOpen, setIsMobileFormOpen] = useState(false); // mobile inline form
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isMobileFormOpen, setIsMobileFormOpen] = useState(false);
+  const [contactSource, setContactSource] = useState<ContactSource>('menu');
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -65,23 +71,41 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!isLanding) return;
+    const handleContactAction = (event: Event) => {
+      const source = (event as CustomEvent<ContactSource>).detail;
+      if (source !== 'contact_section') return;
+      setContactSource(source);
+      setIsMenuOpen(false);
+      setIsDrawerOpen(true);
+      trackContactEvent('contact_open', source);
+    };
+    window.addEventListener(OPEN_CONTACT_EVENT, handleContactAction);
+    return () => window.removeEventListener(OPEN_CONTACT_EVENT, handleContactAction);
+  }, [isLanding]);
+
   const navLinks = [
     { name: t('about'), href: `/${locale}/#about` },
     { name: t('skills'), href: `/${locale}/#skills` },
     { name: t('work'), href: `/${locale}/#case-studies` },
   ];
 
-  // Desktop: toggles the floating drawer
   const handleSayHello = () => {
-    setIsDrawerOpen((prev) => !prev);
+    if (!isDrawerOpen || contactSource !== 'menu') {
+      setContactSource('menu');
+      setIsDrawerOpen(true);
+      trackContactEvent('contact_open', 'menu');
+    } else {
+      setIsDrawerOpen(false);
+    }
     setIsMenuOpen(false);
+    setIsMobileFormOpen(false);
   };
 
-  // Mobile: toggles the inline form — completely independent from the desktop drawer
-  // so ContactDrawer never receives isOpen=true on mobile and never registers its
-  // document-level mousedown listener against the mobile form's inputs.
   const handleSayHelloMobile = () => {
-    setIsMobileFormOpen((prev) => !prev);
+    setIsMobileFormOpen((previous) => !previous);
+    setIsDrawerOpen(false);
     setIsMenuOpen(false);
   };
 
@@ -91,7 +115,7 @@ export default function Navigation() {
         isScrolled ? 'bg-[#0a0a0a]/95 backdrop-blur-md shadow-lg shadow-black/20' : 'bg-[#0a0a0a]'
       } border-b border-zinc-800/60`}
     >
-      <nav className="max-w-6xl mx-auto px-6">
+      <nav className="relative max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
@@ -118,11 +142,13 @@ export default function Navigation() {
           <div className="hidden md:flex items-center gap-5">
             <LanguageSelector />
 
-            {/* Say Hello button + panel anchored to this wrapper */}
-            <div className="relative">
+            <div className={isLainPage ? undefined : 'relative'}>
               <button
                 onClick={handleSayHello}
                 data-contact-trigger
+                data-contact-source="menu"
+                aria-expanded={isDrawerOpen}
+                aria-controls="contact-panel"
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-none border-b-2 ${
                   isDrawerOpen
                     ? 'text-zinc-900 bg-zinc-100 border-zinc-100'
@@ -136,9 +162,14 @@ export default function Navigation() {
                   }`}
                 />
               </button>
-
-              {/* Panel anchored to right edge of button */}
-              <ContactDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+              {!isLainPage && (
+                <ContactDrawer
+                  isOpen={isDrawerOpen}
+                  source={contactSource}
+                  placement="button"
+                  onClose={() => setIsDrawerOpen(false)}
+                />
+              )}
             </div>
           </div>
 
@@ -148,6 +179,7 @@ export default function Navigation() {
             <button
               onClick={() => {
                 setIsMenuOpen(!isMenuOpen);
+                setIsDrawerOpen(false);
                 setIsMobileFormOpen(false);
               }}
               className="text-zinc-400 hover:text-zinc-200 transition-colors"
@@ -171,22 +203,29 @@ export default function Navigation() {
               </a>
             ))}
             <button
-              onClick={handleSayHelloMobile}
+              onClick={isLainPage ? handleSayHello : handleSayHelloMobile}
+              data-contact-trigger
+              data-contact-source="menu"
+              aria-expanded={isLainPage ? isDrawerOpen : isMobileFormOpen}
+              aria-controls={isLainPage ? 'contact-panel' : 'mobile-contact-panel'}
               className="w-full mt-2 text-left px-2 py-2.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
             >
               {t('say_hello')} ↓
             </button>
           </div>
         )}
+        {isLainPage && (
+          <ContactDrawer
+            isOpen={isDrawerOpen}
+            source={contactSource}
+            onClose={() => setIsDrawerOpen(false)}
+          />
+        )}
       </nav>
-
-      {/* Mobile contact form — inline below mobile menu */}
-      {isMobileFormOpen && (
-        <div className="md:hidden border-t border-zinc-800 px-6 py-6">
-          <p className="text-sm font-medium text-zinc-200 mb-4">
-            {t('say_hello')}
-          </p>
-          <ContactForm />
+      {!isLainPage && isMobileFormOpen && (
+        <div id="mobile-contact-panel" className="md:hidden border-t border-zinc-800 px-6 py-6">
+          <p className="text-sm font-medium text-zinc-200 mb-4">{t('say_hello')}</p>
+          <ContactForm source="menu" />
         </div>
       )}
     </header>

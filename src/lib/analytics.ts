@@ -1,42 +1,57 @@
-// Extend Window interface for Google Analytics
 declare global {
   interface Window {
-    gtag: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
-export const trackEvent = (eventName: string, properties?: Record<string, unknown>) => {
-    if (typeof window !== 'undefined') {
-      // Google Analytics 4
-      if (window.gtag) {
-        window.gtag('event', eventName, properties);
-      }
-      
-      // Custom analytics tracking
-      console.log('Analytics event:', eventName, properties);
-    }
-  };
-  
-  export const trackPageView = (url: string) => {
-    if (typeof window !== 'undefined') {
-      if (window.gtag) {
-        window.gtag('config', process.env.NEXT_PUBLIC_ANALYTICS_ID!, {
-          page_path: url,
-        });
-      }
-    }
-  };
-  
-  // Domain detection for analytics
-  export const getDomainSource = () => {
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      if (hostname.includes('ramdel.mx')) {
-        return 'ramdel.mx';
-      } else if (hostname.includes('ramdel.dev')) {
-        return 'ramdel.dev';
-      }
-      return 'unknown';
-    }
-    return 'server';
-  };
+export type ContactSource = 'menu' | 'contact_section';
+export type ContactOutcome = 'sent' | 'local_only' | 'failed';
+
+type ContactEvent = 'contact_open' | 'contact_submit';
+type PendingContactEvent = { event: ContactEvent; source: ContactSource; outcome?: ContactOutcome };
+const pendingEvents: PendingContactEvent[] = [];
+
+function hasAnalyticsConsent() {
+  if (typeof window === 'undefined' || !process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) return false;
+  try {
+    return window.localStorage.getItem('analytics-consent') === 'accepted';
+  } catch {
+    return false;
+  }
+}
+
+function dispatchContactEvent({ event, source, outcome }: PendingContactEvent) {
+  window.gtag?.('event', event, {
+    send_to: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+    contact_source: source,
+    ...(event === 'contact_submit' && outcome ? { contact_outcome: outcome } : {}),
+  });
+}
+
+/** Only fixed, non-identifying values may leave the contact flow. */
+export function trackContactEvent(
+  event: ContactEvent,
+  source: ContactSource,
+  outcome?: ContactOutcome,
+) {
+  if (!hasAnalyticsConsent()) return;
+  const payload = { event, source, outcome };
+  if (typeof window.gtag === 'function') {
+    dispatchContactEvent(payload);
+  } else {
+    pendingEvents.push(payload);
+  }
+}
+
+/** Flushes fixed-value events only after the consented GA script is initialized. */
+export function flushPendingContactEvents() {
+  if (!hasAnalyticsConsent() || typeof window.gtag !== 'function') {
+    pendingEvents.length = 0;
+    return;
+  }
+  pendingEvents.splice(0).forEach(dispatchContactEvent);
+}
+
+export function clearPendingContactEvents() {
+  pendingEvents.length = 0;
+}

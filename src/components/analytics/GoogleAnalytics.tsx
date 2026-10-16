@@ -2,6 +2,7 @@
 
 import Script from 'next/script';
 import { useState, useEffect } from 'react';
+import { flushPendingContactEvents } from '@/lib/analytics';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
@@ -12,6 +13,7 @@ export default function GoogleAnalytics() {
     // Register listener first — setConsent only ever runs inside this callback
     const handler = () => setConsent(true);
     window.addEventListener('analytics-consent-granted', handler);
+    window.addEventListener('analytics-ready', flushPendingContactEvents);
 
     // If already accepted in a previous visit, fire through the same event path
     // so setState is always called from a callback, never directly in the effect body
@@ -19,7 +21,10 @@ export default function GoogleAnalytics() {
       window.dispatchEvent(new Event('analytics-consent-granted'));
     }
 
-    return () => window.removeEventListener('analytics-consent-granted', handler);
+    return () => {
+      window.removeEventListener('analytics-consent-granted', handler);
+      window.removeEventListener('analytics-ready', flushPendingContactEvents);
+    };
   }, []);
 
   // Don't render anything if no consent or env var missing
@@ -40,6 +45,7 @@ export default function GoogleAnalytics() {
             anonymize_ip: true,
             cookie_flags: 'SameSite=None;Secure'
           });
+          window.dispatchEvent(new Event('analytics-ready'));
         `}
       </Script>
     </>

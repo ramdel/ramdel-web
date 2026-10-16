@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import * as motion from 'motion/react-client';
 import { AnimatePresence } from 'motion/react';
 import { Cookie } from 'lucide-react';
+import { clearPendingContactEvents } from '@/lib/analytics';
 
 export default function CookieBanner() {
   const t = useTranslations('CookieBanner');
@@ -27,6 +28,7 @@ export default function CookieBanner() {
 
   const handleDecline = () => {
     localStorage.setItem('analytics-consent', 'declined');
+    clearPendingContactEvents();
     setVisible(false);
   };
 

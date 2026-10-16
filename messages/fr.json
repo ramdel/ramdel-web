@@ -5,6 +5,28 @@
     "work": "Études de cas",
     "say_hello": "Bonjour"
   },
+  "Lain": {
+    "eyebrow": "DEVSECOPS / CLOUD / IA",
+    "hero_line1": "Infrastructure.",
+    "hero_line2": "Automatisation.",
+    "hero_line3": "Confiance dès la conception.",
+    "hero_note": "Les systèmes sont plus solides lorsque la sécurité fait partie de l’architecture, et non d’un ajout tardif.",
+    "services_label": "01 / Compétences",
+    "services_title": "De l’architecture à l’exploitation.",
+    "services_intro": "Une approche pratique pour construire, sécuriser et exploiter des systèmes en production.",
+    "service1_desc": "Architecture cloud pensée pour la résilience, les accès et les coûts.",
+    "service2_desc": "Pipelines de livraison reproductibles et infrastructure en tant que code.",
+    "service3_desc": "Contrôles de sécurité intégrés à chaque étape du cycle de vie.",
+    "service4_desc": "Automatisation et logiciels qui clarifient les opérations complexes.",
+    "work_label": "02 / Projets sélectionnés",
+    "work_intro": "Explorez cinq études de cas en détail.",
+    "about_label": "03 / La personne",
+    "contact_label": "04 / Contact",
+    "contact_title": "Construisons quelque chose de résilient.",
+    "contact_intro": "Parlez-moi de votre plateforme, de ses risques ou du système que vous souhaitez améliorer.",
+    "contact_action": "Décrivez votre projet",
+    "scroll": "Défiler pour explorer"
+  },
   "Hero": {
     "available": "Disponible pour des opportunités",
     "location": "Montréal, QC",
@@ -239,7 +261,12 @@
     "message_placeholder": "Parlez-moi de l'opportunité, du projet ou de la façon dont nous pouvons collaborer...",
     "send": "Envoyer",
     "sending": "Envoi en cours...",
-    "success": "Message envoyé avec succès!",
+    "success": "Votre message a bien été envoyé.",
+    "local_success": "Votre demande a été traitée, mais aucun courriel n'a été envoyé car l'envoi n'est pas configuré.",
+    "name_error": "Le nom doit contenir au moins 2 caractères.",
+    "email_error": "Saisissez une adresse courriel valide.",
+    "subject_error": "Le sujet doit contenir au moins 5 caractères.",
+    "message_error": "Le message doit contenir au moins 10 caractères.",
     "error": "Une erreur s'est produite. Veuillez réessayer."
   },
   "Footer": {
@@ -249,7 +276,7 @@
   },
   "CookieBanner": {
     "title": "Ce site utilise des cookies",
-    "message": "Nous utilisons Google Analytics pour comprendre comment les visiteurs trouvent ce site et quels canaux suscitent le plus d'intérêt. Aucune donnée personnelle n'est partagée avec des tiers.",
+    "message": "Avec votre consentement, Google Analytics nous aide à comprendre les visites et le point d'accès au formulaire utilisé. Le contenu du formulaire n'est pas envoyé à Analytics.",
     "accept": "Accepter les cookies",
     "decline": "Non merci"
   }
