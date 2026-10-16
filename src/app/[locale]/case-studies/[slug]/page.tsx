@@ -1,48 +1,95 @@
+import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import '@/components/lain/lain.css';
+import '@/components/lain/case-study.css';
 
-const slugToKey: Record<string, string> = {
-  'aws-security-transformation': 'aws_security',
-  'aws-cost-optimization': 'aws_cost',
-  'cicd-security-pipeline': 'cicd_security',
-  'ai-agent-platform': 'ai_platform',
-  'compliance-transformation': 'compliance',
+const slugs = [
+  'aws-security-transformation',
+  'aws-cost-optimization',
+  'cicd-security-pipeline',
+  'ai-agent-platform',
+  'compliance-transformation',
+] as const;
+
+type CaseStudySlug = (typeof slugs)[number];
+type MediaPlacement = 'after-overview' | 'after-solution' | 'after-results';
+
+type CaseStudyMedia = {
+  kind: 'image' | 'diagram' | 'chart';
+  src: string;
+  width: number;
+  height: number;
+  altKey: string;
+  captionKey?: string;
 };
 
-const caseStudyTools: Record<string, string[]> = {
-  'aws-security-transformation': [
-    'AWS GuardDuty', 'AWS Security Hub', 'IAM', 'KMS', 'Python', 'Boto3',
-    'Lambda', 'CloudWatch', 'Burp Suite', 'ModSecurity', 'VPC Flow Logs',
-  ],
-  'aws-cost-optimization': [
-    'Python', 'Boto3', 'AWS Cost Explorer', 'EC2', 'EBS', 'S3',
-    'Route53', 'CloudWatch', 'Lambda', 'AWS Budgets',
-  ],
-  'cicd-security-pipeline': [
-    'GitHub Actions', 'Docker', 'AWS ECR', 'AWS ECS', 'Terraform',
-    'Semgrep', 'SonarQube', 'Trivy', 'OWASP Dependency-Check', 'Blue/Green Deploy',
-  ],
-  'ai-agent-platform': [
-    'Pulumi TypeScript', 'AWS EC2', 'Docker', 'AWS EFS', 'AWS SSM',
-    'Secrets Manager', 'CloudWatch', 'SNS', 'IAM', 'Python',
-  ],
-  'compliance-transformation': [
-    'AWS CDK TypeScript', 'EC2 Windows/IIS', 'RDS SQL Server', 'WAF v2',
-    'GuardDuty', 'Security Hub', 'Inspector v2', 'CloudTrail',
-    'GitHub Actions OIDC', 'AWS Backup', 'SSM Session Manager',
-  ],
+type CaseStudyConfig = {
+  key: string;
+  motif: string;
+  mediaPlacement: MediaPlacement;
+  media?: CaseStudyMedia;
+  tools: readonly string[];
 };
 
-export async function generateStaticParams() {
-  return [
-    { slug: 'aws-security-transformation' },
-    { slug: 'aws-cost-optimization' },
-    { slug: 'cicd-security-pipeline' },
-    { slug: 'ai-agent-platform' },
-    { slug: 'compliance-transformation' },
-  ];
+// Media remains absent until a real, reviewed asset and its translated alt text exist.
+const caseStudies: Record<CaseStudySlug, CaseStudyConfig> = {
+  'aws-security-transformation': {
+    key: 'aws_security',
+    motif: 'security',
+    mediaPlacement: 'after-solution',
+    tools: [
+      'AWS GuardDuty', 'AWS Security Hub', 'IAM', 'KMS', 'Python', 'Boto3',
+      'Lambda', 'CloudWatch', 'Burp Suite', 'ModSecurity', 'VPC Flow Logs',
+    ],
+  },
+  'aws-cost-optimization': {
+    key: 'aws_cost',
+    motif: 'cost',
+    mediaPlacement: 'after-results',
+    tools: [
+      'Python', 'Boto3', 'AWS Cost Explorer', 'EC2', 'EBS', 'S3',
+      'Route53', 'CloudWatch', 'Lambda', 'AWS Budgets',
+    ],
+  },
+  'cicd-security-pipeline': {
+    key: 'cicd_security',
+    motif: 'pipeline',
+    mediaPlacement: 'after-solution',
+    tools: [
+      'GitHub Actions', 'Docker', 'AWS ECR', 'AWS ECS', 'Terraform',
+      'Semgrep', 'SonarQube', 'Trivy', 'OWASP Dependency-Check', 'Blue/Green Deploy',
+    ],
+  },
+  'ai-agent-platform': {
+    key: 'ai_platform',
+    motif: 'platform',
+    mediaPlacement: 'after-solution',
+    tools: [
+      'Pulumi TypeScript', 'AWS EC2', 'Docker', 'AWS EFS', 'AWS SSM',
+      'Secrets Manager', 'CloudWatch', 'SNS', 'IAM', 'Python',
+    ],
+  },
+  'compliance-transformation': {
+    key: 'compliance',
+    motif: 'compliance',
+    mediaPlacement: 'after-solution',
+    tools: [
+      'AWS CDK TypeScript', 'EC2 Windows/IIS', 'RDS SQL Server', 'WAF v2',
+      'GuardDuty', 'Security Hub', 'Inspector v2', 'CloudTrail',
+      'GitHub Actions OIDC', 'AWS Backup', 'SSM Session Manager',
+    ],
+  },
+};
+
+function isCaseStudySlug(slug: string): slug is CaseStudySlug {
+  return Object.prototype.hasOwnProperty.call(caseStudies, slug);
+}
+
+export function generateStaticParams() {
+  return slugs.map((slug) => ({ slug }));
 }
 
 interface Props {
@@ -51,164 +98,146 @@ interface Props {
 
 export default async function CaseStudyPage({ params }: Props) {
   const { locale, slug } = await params;
-  const key = slugToKey[slug];
-  if (!key) notFound();
+  if (!isCaseStudySlug(slug)) notFound();
 
+  const config = caseStudies[slug];
+  const index = slugs.indexOf(slug) + 1;
   const t = await getTranslations({ locale, namespace: 'CaseStudyPages' });
-  const tools = caseStudyTools[slug] ?? [];
+  const portfolioHref = `/${locale}/`;
+  const studiesHref = `/${locale}/#case-studies`;
+  const metrics = [1, 2, 3, 4].map((number) => ({
+    value: t(`${config.key}.m${number}_value`),
+    label: t(`${config.key}.m${number}_label`),
+  }));
+  const sections = [
+    { id: 'overview', number: '01', label: t('overview_label'), body: t(`${config.key}.overview`), mediaPlacement: 'after-overview' },
+    { id: 'problem', number: '02', label: t('problem_label'), body: t(`${config.key}.problem`), mediaPlacement: null },
+    { id: 'solution', number: '03', label: t('solution_label'), body: t(`${config.key}.solution`), mediaPlacement: 'after-solution' },
+    { id: 'results', number: '04', label: t('results_label'), body: t(`${config.key}.results`), mediaPlacement: 'after-results' },
+  ] as const;
 
-  const metrics = [
-    { value: t(`${key}.m1_value`), label: t(`${key}.m1_label`) },
-    { value: t(`${key}.m2_value`), label: t(`${key}.m2_label`) },
-    { value: t(`${key}.m3_value`), label: t(`${key}.m3_label`) },
-    { value: t(`${key}.m4_value`), label: t(`${key}.m4_label`) },
-  ];
+  const renderMedia = (placement: MediaPlacement) => {
+    const media = config.media;
+    if (!media || config.mediaPlacement !== placement) return null;
 
-  const takeaways = [
-    t(`${key}.takeaway1`),
-    t(`${key}.takeaway2`),
-    t(`${key}.takeaway3`),
-    t(`${key}.takeaway4`),
-  ];
+    return (
+      <figure className="case-media" data-kind={media.kind}>
+        <Image
+          src={media.src}
+          alt={t(`${config.key}.${media.altKey}`)}
+          width={media.width}
+          height={media.height}
+          sizes="(max-width: 680px) calc(100vw - 2rem), (max-width: 1200px) 75vw, 840px"
+          className="case-media-image"
+        />
+        {media.captionKey && <figcaption>{t(`${config.key}.${media.captionKey}`)}</figcaption>}
+      </figure>
+    );
+  };
 
   return (
-    <div className="min-h-screen">
-      {/* Back nav */}
-      <div className="border-b border-zinc-800/60 bg-[#0a0a0a] sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-6 py-3 flex items-center gap-4">
-          <Link
-            href={`/${locale}/`}
-            className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {t('back')}
-          </Link>
-          <span className="text-zinc-700">·</span>
-          <Link
-            href={`/${locale}/#case-studies`}
-            className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
-          >
-            {t('all_case_studies')}
-          </Link>
-        </div>
-      </div>
+    <div className="lain-page lain-case-page">
+      <section className={`case-hero case-motif-${config.motif}`} aria-labelledby="case-title">
+        <div className="case-hero-grid" aria-hidden="true" />
+        <div className="lain-container case-hero-inner">
+          <div className="case-breadcrumbs">
+            <Link href={portfolioHref}><ArrowLeft size={14} aria-hidden="true" />{t('back')}</Link>
+            <span aria-hidden="true">/</span>
+            <Link href={studiesHref}>{t('all_case_studies')}</Link>
+          </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        {/* Header */}
-        <div className="mb-12">
-          <p className="section-label mb-4">{t(`${key}.category`)}</p>
-          <h1 className="text-3xl md:text-5xl font-bold text-zinc-100 mb-4 leading-tight">
-            {t(`${key}.title`)}
-          </h1>
-          <p className="text-lg text-cyan-400">{t(`${key}.subtitle`)}</p>
+          <div className="case-hero-layout">
+            <div className="case-hero-copy">
+              <div className="case-hero-topline">
+                <span className="lain-kicker">{t(`${config.key}.category`)}</span>
+                <span>{String(index).padStart(2, '0')} / {String(slugs.length).padStart(2, '0')}</span>
+              </div>
+              <h1 id="case-title">{t(`${config.key}.title`)}</h1>
+              <p className="case-hero-subtitle">{t(`${config.key}.subtitle`)}</p>
+            </div>
+            <div className="case-hero-art" aria-hidden="true">
+              <span className="case-art-orbit" />
+              <span className="case-art-axis" />
+              <span className="case-art-node case-art-node-one" />
+              <span className="case-art-node case-art-node-two" />
+              <span className="case-art-index">{String(index).padStart(2, '0')}</span>
+            </div>
+          </div>
         </div>
+      </section>
 
-        {/* Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14">
-          {metrics.map((m) => (
-            <div
-              key={m.label}
-              className="bg-card border border-zinc-800 rounded-2xl p-5 text-center card-glow"
-            >
-              <div className="text-2xl font-bold font-mono text-cyan-400 mb-1">{m.value}</div>
-              <div className="text-xs text-zinc-500 leading-snug">{m.label}</div>
+      <section className="case-proof" aria-label={t('results_label')}>
+        <div className="lain-container case-proof-grid">
+          {metrics.map(({ value, label }) => (
+            <div className="case-proof-item" key={label}>
+              <strong>{value}</strong>
+              <span>{label}</span>
             </div>
           ))}
         </div>
+      </section>
 
-        {/* Content sections */}
-        <div className="space-y-10">
-          {/* Overview */}
-          <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
-              {t('overview_label')}
-            </h2>
-            <p className="text-zinc-300 leading-relaxed">{t(`${key}.overview`)}</p>
-          </section>
+      <div className="lain-container case-content">
+        <div className="case-story-layout">
+          <div className="case-story-rail" aria-hidden="true">
+            <span>{String(index).padStart(2, '0')} / {String(slugs.length).padStart(2, '0')}</span>
+            <span className="case-story-rail-line" />
+          </div>
 
-          <hr className="border-zinc-800" />
+          <div className="case-story">
+            {sections.map((section) => (
+              <div className="case-story-unit" key={section.id}>
+                <section className="case-story-section" id={`case-${section.id}`} aria-labelledby={`case-${section.id}-title`}>
+                  <div className="case-story-heading">
+                    <span className="case-story-number" aria-hidden="true">{section.number} /</span>
+                    <h2 id={`case-${section.id}-title`}>{section.label}</h2>
+                  </div>
+                  <p>{section.body}</p>
+                </section>
+                {section.mediaPlacement && renderMedia(section.mediaPlacement)}
+              </div>
+            ))}
 
-          {/* Problem */}
-          <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
-              {t('problem_label')}
-            </h2>
-            <p className="text-zinc-300 leading-relaxed">{t(`${key}.problem`)}</p>
-          </section>
+            <section className="case-story-section case-takeaways" id="case-takeaways" aria-labelledby="case-takeaways-title">
+              <div className="case-story-heading">
+                <span className="case-story-number" aria-hidden="true">05 /</span>
+                <h2 id="case-takeaways-title">{t('takeaways_label')}</h2>
+              </div>
+              <ol>
+                {[1, 2, 3, 4].map((number) => (
+                  <li key={number}>
+                    <span aria-hidden="true">{String(number).padStart(2, '0')}</span>
+                    <p>{t(`${config.key}.takeaway${number}`)}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
 
-          <hr className="border-zinc-800" />
-
-          {/* Solution */}
-          <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
-              {t('solution_label')}
-            </h2>
-            <p className="text-zinc-300 leading-relaxed">{t(`${key}.solution`)}</p>
-          </section>
-
-          <hr className="border-zinc-800" />
-
-          {/* Results */}
-          <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
-              {t('results_label')}
-            </h2>
-            <p className="text-zinc-300 leading-relaxed">{t(`${key}.results`)}</p>
-          </section>
-
-          <hr className="border-zinc-800" />
-
-          {/* Key Takeaways */}
-          <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4">
-              {t('takeaways_label')}
-            </h2>
-            <ul className="space-y-3">
-              {takeaways.map((tw, i) => (
-                <li key={i} className="flex gap-3">
-                  <span className="text-emerald-400 font-mono text-sm shrink-0 mt-0.5">→</span>
-                  <span className="text-zinc-300 text-sm leading-relaxed">{tw}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <hr className="border-zinc-800" />
-
-          {/* Tools */}
-          <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4">
-              {t('tools_label')}
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {tools.map((tool) => (
-                <span key={tool} className="skill-tag">
-                  {tool}
-                </span>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-16 pt-10 border-t border-zinc-800 text-center">
-          <p className="text-zinc-500 text-sm mb-4">{t('hire_cta')}</p>
-          <div className="flex justify-center gap-3 flex-wrap">
-            <Link
-              href={`/${locale}/`}
-              className="px-5 py-2.5 border border-zinc-700 text-zinc-300 text-sm rounded-lg hover:border-zinc-500 hover:text-zinc-100 transition-colors"
-            >
-              {t('back')}
-            </Link>
-            <Link
-              href={`/${locale}/#case-studies`}
-              className="px-5 py-2.5 bg-cyan-400 text-zinc-900 font-semibold text-sm rounded-lg hover:bg-cyan-300 transition-colors"
-            >
-              {t('all_case_studies')}
-            </Link>
+            <section className="case-story-section case-tools" id="case-tools" aria-labelledby="case-tools-title">
+              <div className="case-story-heading">
+                <span className="case-story-number" aria-hidden="true">06 /</span>
+                <h2 id="case-tools-title">{t('tools_label')}</h2>
+              </div>
+              <ul>
+                {config.tools.map((tool) => <li key={tool}>{tool}</li>)}
+              </ul>
+            </section>
           </div>
         </div>
       </div>
+
+      <section className="case-next" aria-label={t('hire_cta')}>
+        <div className="lain-container case-next-inner">
+          <div>
+            <p className="lain-kicker">{String(index).padStart(2, '0')} / {String(slugs.length).padStart(2, '0')}</p>
+            <h2>{t('hire_cta')}</h2>
+          </div>
+          <div className="case-next-actions">
+            <Link href={portfolioHref}><ArrowLeft size={16} aria-hidden="true" /> {t('back')}</Link>
+            <Link href={studiesHref}>{t('all_case_studies')} <ArrowRight size={16} aria-hidden="true" /></Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

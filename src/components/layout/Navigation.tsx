@@ -58,6 +58,7 @@ export default function Navigation() {
   const locale = useLocale();
   const pathname = usePathname();
   const isLanding = pathname === `/${locale}` || pathname === `/${locale}/`;
+  const isLainPage = isLanding || pathname.startsWith(`/${locale}/case-studies/`);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobileFormOpen, setIsMobileFormOpen] = useState(false);
@@ -141,7 +142,7 @@ export default function Navigation() {
           <div className="hidden md:flex items-center gap-5">
             <LanguageSelector />
 
-            <div className={isLanding ? undefined : 'relative'}>
+            <div className={isLainPage ? undefined : 'relative'}>
               <button
                 onClick={handleSayHello}
                 data-contact-trigger
@@ -161,7 +162,7 @@ export default function Navigation() {
                   }`}
                 />
               </button>
-              {!isLanding && (
+              {!isLainPage && (
                 <ContactDrawer
                   isOpen={isDrawerOpen}
                   source={contactSource}
@@ -202,18 +203,18 @@ export default function Navigation() {
               </a>
             ))}
             <button
-              onClick={isLanding ? handleSayHello : handleSayHelloMobile}
+              onClick={isLainPage ? handleSayHello : handleSayHelloMobile}
               data-contact-trigger
               data-contact-source="menu"
-              aria-expanded={isLanding ? isDrawerOpen : isMobileFormOpen}
-              aria-controls={isLanding ? 'contact-panel' : 'mobile-contact-panel'}
+              aria-expanded={isLainPage ? isDrawerOpen : isMobileFormOpen}
+              aria-controls={isLainPage ? 'contact-panel' : 'mobile-contact-panel'}
               className="w-full mt-2 text-left px-2 py-2.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
             >
               {t('say_hello')} ↓
             </button>
           </div>
         )}
-        {isLanding && (
+        {isLainPage && (
           <ContactDrawer
             isOpen={isDrawerOpen}
             source={contactSource}
@@ -221,7 +222,7 @@ export default function Navigation() {
           />
         )}
       </nav>
-      {!isLanding && isMobileFormOpen && (
+      {!isLainPage && isMobileFormOpen && (
         <div id="mobile-contact-panel" className="md:hidden border-t border-zinc-800 px-6 py-6">
           <p className="text-sm font-medium text-zinc-200 mb-4">{t('say_hello')}</p>
           <ContactForm source="menu" />
