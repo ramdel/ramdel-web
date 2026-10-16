@@ -22,7 +22,7 @@ export default function LainSignal() {
         innerHTML: scrambleText({
           text: SIGNAL_TEXT,
           chars: 'blocks',
-          duration: 2900,
+          duration: 2300,
         }),
       });
     });

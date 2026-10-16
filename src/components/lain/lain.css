@@ -38,7 +38,21 @@ body:has(.lain-page) header button:focus-visible {
   overflow: hidden;
 }
 
-.lain-artwork { object-fit: cover; object-position: center; }
+.lain-artwork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.lain-portal-node,
+.lain-portal-node-halo,
+.lain-portal-ring-inner,
+.lain-portal-core-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+}
 .lain-hero-visual .lain-visual-index { display: none; }
 .lain-signal {
   position: absolute;
@@ -117,7 +131,8 @@ body:has(.lain-page) header button:focus-visible {
 .lain-hero h1 span { display: block; }
 .lain-hero-title-line {
   position: relative;
-  overflow: hidden;
+  /* The original title can extend beyond the 800px copy column at wide sizes. */
+  overflow: visible;
 }
 .lain-hero-title-measure { visibility: hidden; }
 .lain-hero-title-animated {
@@ -386,6 +401,16 @@ body:has(.lain-page) .contact-status-error { background: #f9e6ec; border-color: 
   .lain-container { width: min(100% - 2rem, 1240px); }
   .lain-hero, .lain-hero-content { min-height: 730px; }
   .lain-hero-visual .lain-artwork { object-position: 68% center; }
+  .lain-hero-visual svg.lain-artwork {
+    inset: auto;
+    top: 0;
+    left: 68%;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 8 / 5;
+    max-width: none;
+    transform: translateX(-68%);
+  }
   .lain-hero-shade { background: linear-gradient(90deg, #e0ddecea, #e0ddeca0), linear-gradient(0deg, #d4cfdf, transparent 40%); }
   .lain-hero-topline span:last-child, .lain-side-rail { display: none; }
   .lain-hero-signal {
