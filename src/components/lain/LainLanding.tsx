@@ -3,7 +3,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { ArrowDown, ArrowRight, Cloud, GitBranch, ShieldCheck, Terminal } from 'lucide-react';
 import AboutSection from '@/components/sections/AboutSection';
 import LainContactAction from './LainContactAction';
+import LainHeroTitle from './LainHeroTitle';
 import LainMetrics from './LainMetrics';
+import LainSignal from './LainSignal';
 import LainVisual from './LainVisual';
 import './lain.css';
 
@@ -45,14 +47,19 @@ export default function LainLanding() {
           </div>
           <div className="lain-hero-copy">
             <p className="lain-coordinate">MARIO DE JESUS / {hero('location')}</p>
-            <h1><span>{t('hero_line1')}</span><span>{t('hero_line2')}</span><span className="lain-accent">{t('hero_line3')}</span></h1>
+            <LainHeroTitle
+              key={locale}
+              line1={t('hero_line1')}
+              line2={t('hero_line2')}
+              line3={t('hero_line3')}
+            />
             <p className="lain-lede">{hero('description')}</p>
             <div className="lain-actions">
               <a className="lain-button" href={`/${locale}/#skills`}><span aria-hidden="true" className="lain-button-square" /> {skills('section_label')} <ArrowRight size={17} aria-hidden="true" /></a>
               <a className="lain-text-link" href={`/${locale}/#case-studies`}>{hero('cta_work')} <ArrowRight size={15} aria-hidden="true" /></a>
             </div>
           </div>
-          <div className="lain-hero-bottom"><a href={`/${locale}/#skills`}>{t('scroll')} <ArrowDown size={16} aria-hidden="true" /></a><span>SIGNAL: CONNECTED / 01</span></div>
+          <div className="lain-hero-bottom"><a href={`/${locale}/#skills`}>{t('scroll')} <ArrowDown size={16} aria-hidden="true" /></a><LainSignal /></div>
         </div>
         <div className="lain-side-rail" aria-hidden="true">RAMDEL.DEV — HUMAN SYSTEMS / DIGITAL WORLDS</div>
       </section>

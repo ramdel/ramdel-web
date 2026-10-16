@@ -115,6 +115,15 @@ body:has(.lain-page) header button:focus-visible {
   text-wrap: balance;
 }
 .lain-hero h1 span { display: block; }
+.lain-hero-title-line {
+  position: relative;
+  overflow: hidden;
+}
+.lain-hero-title-measure { visibility: hidden; }
+.lain-hero-title-animated {
+  position: absolute;
+  inset: 0;
+}
 .lain-accent { color: #56506e; }
 .lain-lede {
   max-width: 39rem;
@@ -156,6 +165,17 @@ body:has(.lain-page) header button:focus-visible {
   color: #41445e;
 }
 .lain-hero-bottom a { display: inline-flex; gap: .8rem; align-items: center; }
+.lain-hero-signal {
+  display: inline-block;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.lain-hero-signal-measure { visibility: hidden; }
+.lain-hero-signal-animated {
+  position: absolute;
+  inset: 0;
+}
 .lain-side-rail {
   position: absolute;
   z-index: 3;
@@ -367,7 +387,14 @@ body:has(.lain-page) .contact-status-error { background: #f9e6ec; border-color: 
   .lain-hero, .lain-hero-content { min-height: 730px; }
   .lain-hero-visual .lain-artwork { object-position: 68% center; }
   .lain-hero-shade { background: linear-gradient(90deg, #e0ddecea, #e0ddeca0), linear-gradient(0deg, #d4cfdf, transparent 40%); }
-  .lain-hero-topline span:last-child, .lain-side-rail, .lain-hero-bottom span { display: none; }
+  .lain-hero-topline span:last-child, .lain-side-rail { display: none; }
+  .lain-hero-signal {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    clip-path: inset(50%);
+  }
   .lain-hero-copy { padding: 3rem 0; }
   .lain-hero h1 { font-size: clamp(2rem, 9vw, 3.5rem); overflow-wrap: anywhere; }
   .lain-lede { font-size: .87rem; }
