@@ -38,7 +38,7 @@
     ],
     "crons": [
       {
-        "path": "/api/cron/keepalive",
+        "path": "/api/cron/keepalive/",
         "schedule": "0 9 * * 1"
       }
     ]
