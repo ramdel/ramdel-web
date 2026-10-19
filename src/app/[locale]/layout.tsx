@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import '../globals.css';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
@@ -55,6 +56,7 @@ export default async function RootLayout({ children, params }: RootLayoutProps) 
           </div>
           <CookieBanner />
           <GoogleAnalytics />
+          <Analytics />
         </NextIntlClientProvider>
       </body>
     </html>
