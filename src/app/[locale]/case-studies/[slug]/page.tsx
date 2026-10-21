@@ -50,8 +50,8 @@ const caseStudies: Record<CaseStudySlug, CaseStudyConfig> = {
     motif: 'cost',
     mediaPlacement: 'after-results',
     tools: [
-      'Python', 'Boto3', 'AWS Cost Explorer', 'EC2', 'EBS', 'S3',
-      'Route53', 'CloudWatch', 'Lambda', 'AWS Budgets',
+      'AWS CDK TypeScript', 'ECS Fargate', 'RDS MySQL', 'ElastiCache',
+      'ECR', 'CloudFront',
     ],
   },
   'cicd-security-pipeline': {
@@ -59,8 +59,8 @@ const caseStudies: Record<CaseStudySlug, CaseStudyConfig> = {
     motif: 'pipeline',
     mediaPlacement: 'after-solution',
     tools: [
-      'GitHub Actions', 'Docker', 'AWS ECR', 'AWS ECS', 'Terraform',
-      'Semgrep', 'SonarQube', 'Trivy', 'OWASP Dependency-Check', 'Blue/Green Deploy',
+      'GitHub Actions', 'AWS CDK TypeScript', 'Aurora MySQL Serverless v2',
+      'CodeDeploy',
     ],
   },
   'ai-agent-platform': {
