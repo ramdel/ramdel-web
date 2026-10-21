@@ -163,10 +163,11 @@ npm run build        # build de producción
 
 ```bash
 # .env.local (gitignored — nunca commitear)
-AWS_REGION=us-east-2
-AWS_ACCESS_KEY_ID=<from AWS console>
-AWS_SECRET_ACCESS_KEY=<from AWS console>
-NEXT_PUBLIC_ANALYTICS_ID=<analytics id>
+RESEND_API_KEY=<from Resend dashboard — email delivery for /api/contact/>
+UPSTASH_REDIS_REST_URL=<from Upstash console — rate limiter + cron keep-alive>
+UPSTASH_REDIS_REST_TOKEN=<from Upstash console>
+CRON_SECRET=<random, 16+ chars — authenticates Vercel Cron calls to /api/cron/keepalive/>
+NEXT_PUBLIC_GA_MEASUREMENT_ID=<GA4 measurement ID — consent-gated via CookieBanner>
 ```
 
 En Vercel: configurar en Project Settings → Environment Variables.
@@ -179,9 +180,9 @@ Este proyecto tiene hallazgos de seguridad activos documentados en `../security-
 
 | Change | Hallazgos | Severidad | Status |
 |---|---|---|---|
-| `security-headers` | F-09 (CSP), F-10 (Permissions-Policy) | 🟠 Alto / ⚠️ Medio | 🔄 PR #5 abierto — pendiente merge |
-| `cookie-hardening` | F-08/F-17 (NEXT_LOCALE flags) | ⚠️ Medio | 🔄 PR #5 abierto — pendiente merge |
-| `api-rate-limiting` | F-26/F-27 (/api/contact/ rate limit + CSRF) | ⚠️ Medio | 🔄 PR #5 abierto — activo tras configurar Upstash vars |
+| `security-headers` | F-09 (CSP), F-10 (Permissions-Policy) | 🟠 Alto / ⚠️ Medio | ✅ Mergeado (PR #5, 2026-03-26) |
+| `cookie-hardening` | F-08/F-17 (NEXT_LOCALE flags) | ⚠️ Medio | ✅ Mergeado (PR #5, 2026-03-26) |
+| `api-rate-limiting` | F-26/F-27 (/api/contact/ rate limit + CSRF) | ⚠️ Medio | ✅ Mergeado (PR #5) — activo, Upstash Redis con keep-alive cron (PR #14/#15) |
 
 Referencia completa: `../security-audits/openspec/specs/targets/ramdel.dev/spec.md`
 
@@ -208,9 +209,11 @@ Para implementar un change existente:
 - **Vercel:** deploy automático desde `main`. PRs generan preview deployments.
 - **next.config.js vs next.config.ts:** El repo tiene ambos. Usar `.js` como principal — si generan conflicto, consolidar en `.js`.
 - **next-intl:** rutas son `[locale]` — siempre probar en `/en/`, `/es/`, `/fr/`.
-- **AWS SES:** integración opcional para el form de contacto. Sin credenciales el form puede usar un fallback.
+- **Resend:** envío de correo para `/api/contact/`. Sin `RESEND_API_KEY` el form responde éxito sin enviar (dev-safe fallback).
+- **Upstash Redis:** rate limiting de `/api/contact/` + keep-alive semanal (`vercel.json` crons, `/api/cron/keepalive/`) para evitar que Upstash borre la base gratuita por inactividad (14 días).
+- **Vercel Web Analytics:** cookieless, no requiere el cookie banner — corre junto a GA4 (que sí está gated por consentimiento).
 
 ---
 
 *Workspace de desarrollo — Mario de Jesus (ramdel)*
-*Última actualización: 2026-03-26*
+*Última actualización: 2026-10-20*
