@@ -42,7 +42,7 @@ export default async function Footer() {
               <Linkedin className="h-4 w-4" />
             </a>
             <a
-              href="https://www.upwork.com/freelancers/~ramdel"
+              href="/go/upwork/?s=footer"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
